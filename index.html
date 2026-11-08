@@ -5,31 +5,44 @@
   <title>Cierre convexo – Algoritmo de Melkman</title>
   <!-- Esto carga SageMathCell -->
   <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
-  <script>
-    sagecell.makeSagecell({
-      inputLocation: 'div.compute',
-      evalButtonText: 'Lanzar applet interactiva ahora'
-    });
-  </script>
 </head>
 <body>
   <h1>Cierre convexo de un polígono: algoritmo de Melkman</h1>
 
+  <!-- ===== LOLA ===== -->
   <h2>Introducción</h2>
   <p>...</p>
 
+  <!-- ===== ADRI ===== -->
   <h2>Instrucciones</h2>
   <p>...</p>
 
   <h2>Applet</h2>
-  <div class="compute"><script type="text/x-sage">
-# Aquí va el código de Sage (algoritmo + @interact)
-print("Hola, la applet funciona")
-  </script></div>
+  <div id="applet">Cargando applet...</div>
 
+  <!-- Lee melkman.sage (Lola) y applet.sage (Adri), los junta y crea la celda de Sage -->
+  <script>
+    Promise.all([
+      fetch('melkman.sage').then(r => r.text()),
+      fetch('applet.sage').then(r => r.text())
+    ]).then(([codigoLola, codigoAdri]) => {
+      document.getElementById('applet').innerHTML = '';
+      sagecell.makeSagecell({
+        inputLocation: '#applet',
+        code: codigoLola + '\n\n' + codigoAdri,
+        evalButtonText: 'Lanzar applet interactiva ahora'
+      });
+    }).catch(() => {
+      document.getElementById('applet').innerHTML =
+        'No se pudo cargar el código (abre la web desde GitHub Pages o con un servidor local).';
+    });
+  </script>
+
+  <!-- ===== LOLA ===== -->
   <h2>Discusión y aplicaciones reales</h2>
   <p>...</p>
 
+  <!-- ===== ADRI ===== -->
   <h2>Bibliografía</h2>
   <p>...</p>
 </body>
