@@ -20,11 +20,24 @@
   <h2>Applet</h2>
   <div id="applet">Cargando applet...</div>
 
-  <!-- Lee melkman.sage (Lola) y applet.sage (Adri), los junta y crea la celda de Sage -->
+  <!-- Lee el código de Lola y de Adri (.ipynb o .sage), lo junta y crea la celda de Sage -->
   <script>
+    // Si es un notebook (.ipynb) coge solo las celdas de código, saltándose las que empiezan por "# PRUEBA".
+    // Si es un .sage lo coge tal cual.
+    async function cargarCodigo(archivo) {
+      const texto = await (await fetch(archivo)).text();
+      if (!archivo.endsWith('.ipynb')) return texto;
+      const nb = JSON.parse(texto);
+      return nb.cells
+        .filter(c => c.cell_type === 'code')
+        .map(c => Array.isArray(c.source) ? c.source.join('') : c.source)
+        .filter(src => !src.trim().startsWith('# PRUEBA'))
+        .join('\n\n');
+    }
+
     Promise.all([
-      fetch('melkman.sage').then(r => r.text()),
-      fetch('applet.sage').then(r => r.text())
+      cargarCodigo('melkman.ipynb'),   // Lola
+      cargarCodigo('applet.ipynb')     // Adri
     ]).then(([codigoLola, codigoAdri]) => {
       document.getElementById('applet').innerHTML = '';
       sagecell.makeSagecell({
