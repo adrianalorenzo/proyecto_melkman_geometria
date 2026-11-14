@@ -5,15 +5,230 @@
   <title>Cierre convexo – Algoritmo de Melkman</title>
   <!-- Esto carga SageMathCell -->
   <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #2e8b57;
+      --verde-oscuro: #1f5f3f;
+      --verde-claro: #e8f5ee;
+      --morado: #8e44ad;
+      --texto: #2b2f2d;
+      --gris: #6b726e;
+      --fondo: #f3f6f4;
+      --tarjeta: #ffffff;
+      --borde: #dfe7e2;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--texto);
+      background:
+        radial-gradient(circle at 1px 1px, #d6e2db 1px, transparent 0) 0 0 / 22px 22px,
+        var(--fondo);
+    }
+
+    /* ---------- Cabecera ---------- */
+    header {
+      background: linear-gradient(135deg, var(--verde-oscuro), var(--verde));
+      color: #fff;
+      padding: 36px 20px 30px;
+      text-align: center;
+    }
+    header .asignatura {
+      margin: 0 0 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    header .autoras {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+
+    /* ---------- Menú ---------- */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--borde);
+      text-align: center;
+      padding: 10px 12px;
+    }
+    nav a {
+      display: inline-block;
+      margin: 2px 4px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      color: var(--verde-oscuro);
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    nav a:hover { background: var(--verde-claro); }
+
+    /* ---------- Contenido ---------- */
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+    }
+    section {
+      background: var(--tarjeta);
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(31, 95, 63, 0.06);
+      padding: 26px 32px;
+      margin-bottom: 24px;
+      scroll-margin-top: 70px;
+    }
+    h2 {
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--verde-oscuro);
+      border-bottom: 2px solid var(--verde-claro);
+    }
+    h3 {
+      margin: 24px 0 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--verde);
+    }
+    p { margin: 0 0 12px; }
+    ul, ol { padding-left: 24px; }
+    li { margin-bottom: 6px; }
+    li p { margin: 0 0 6px; }
+    a { color: var(--verde); }
+    code { font-family: "JetBrains Mono", monospace; font-size: 0.88em; }
+    strong, b { font-weight: 600; }
+
+    figure { margin: 22px 0; text-align: center; }
+    figure img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+    }
+    figcaption { margin-top: 6px; font-size: 0.86rem; color: var(--gris); }
+
+    table { width: 100%; font-size: 0.9rem; }
+
+    #applet { margin-top: 10px; }
+
+    footer {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--gris);
+      padding: 0 16px 30px;
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 20px 18px; }
+      header h1 { font-size: 1.4rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Cierre convexo de un polígono: algoritmo de Melkman</h1>
+  <header>
+    <p class="asignatura">Geometría Computacional · iMAT · Curso 2026-2027 · Proyecto Final 6</p>
+    <h1>Cierre convexo de un polígono: algoritmo de Melkman</h1>
+    <p class="autoras">Lola Mancebo Olivares · Adriana Lorenzo Mingorance</p>
+  </header>
 
-  <!-- ===== LOLA ===== -->
+  <nav>
+    <a href="#introduccion">Introducción</a>
+    <a href="#instrucciones">Instrucciones</a>
+    <a href="#applet-seccion">Applet</a>
+    <a href="#discusion">Discusión y aplicaciones</a>
+    <a href="#bibliografia">Bibliografía</a>
+    <a href="#uso-ia">Uso de IA</a>
+  </nav>
+
+  <main>
+
+  <section id="introduccion">
   <h2>Introducción</h2>
-  <p>...</p>
+  <h3>¿Qué es el cierre convexo?</h3>
+  <p>Un conjunto es <strong>convexo</strong> si, para cualquier par de puntos del conjunto, el segmento que los une queda entero dentro de él.</p>
+  <p>El <strong>cierre convexo</strong> (o envolvente convexa) de un polígono P, CH(P), es el <strong>menor conjunto convexo que contiene a P</strong>. Una forma intuitiva de imaginarlo: si los vértices del polígono fueran clavos en una tabla y los rodeáramos con una <strong>goma elástica</strong>, la forma que tomaría la goma al soltarla sería el cierre convexo.</p>
+  <p>La goma solo se apoya en vértices del polígono, así que el cierre convexo de un polígono coincide con el cierre convexo de sus vértices [2]. Los vértices que «se meten hacia dentro» (los vértices cóncavos) nunca forman parte de él.</p>
+  <figure style="text-align: center;">
+    <img src="img/fig1_goma.png" alt="Polígono y su cierre convexo" width="350">
+    <figcaption><i>Figura 1. Un polígono (negro) y su cierre convexo (verde). Los vértices rojos quedan dentro del cierre.</i></figcaption>
+  </figure>
+  <h3>¿Por qué un algoritmo específico para polígonos?</h3>
+  <p>Para una nube de puntos cualquiera, los algoritmos clásicos como el de Graham necesitan <strong>O(n log n)</strong> operaciones, porque primero tienen que ordenar los puntos [2].</p>
+  <p>Pero los vértices de un polígono <strong>ya vienen ordenados</strong>: el propio polígono dice en qué orden se recorren. Aprovechando ese orden, el cierre convexo se puede calcular en <strong>tiempo lineal, O(n)</strong> [2], [10].</p>
+  <p>No basta con aplicar Graham sin ordenar: ese método solo mira tres vértices seguidos y falla cuando el polígono tiene <strong>bolsillos</strong> (zonas que quedan dentro del cierre pero fuera del polígono) [2]. El <strong>algoritmo de Melkman</strong> (1987) [1] resuelve este problema de la forma más sencilla conocida.</p>
+  <h3>Idea del algoritmo</h3>
+  <p>Melkman es una modificación del algoritmo <strong>incremental</strong> [2]: recorre los vértices del polígono <strong>en orden</strong>, uno a uno, y mantiene en todo momento el cierre convexo <strong>C</strong> de los vértices que ya ha visto.</p>
+  <ol type="1">
+  <li><p><strong>Inicio.</strong> Con los tres primeros vértices se forma un triángulo, que siempre es convexo. Ese triángulo es el primer C.</p></li>
+  <li><p>Llamamos <strong>q</strong> al último vértice que se ha añadido a C, y <strong>ANTERIOR(q)</strong> y <strong>POSTERIOR(q)</strong> a sus dos vecinos en C [2].</p></li>
+  <li><p>Para cada nuevo vértice <strong>p</strong> se mira si está en la región <strong>R_q</strong>: la zona del plano que queda a la vez «por dentro» de las dos rectas de C que pasan por q (la que va de ANTERIOR(q) a q y la que va de q a POSTERIOR(q)). Como el polígono es simple y no puede cruzarse a sí mismo, un vértice que cae en R_q está <strong>escondido detrás de C</strong> y no puede formar parte del cierre.</p></li>
+  <li><p>Se distinguen dos casos:</p>
+  <ul>
+  <li><p><strong>Caso 1: p ∈ R_q.</strong> El vértice está dentro y <strong>se descarta</strong>. Se pasa al siguiente.</p></li>
+  <li><p><strong>Caso 2: p ∉ R_q.</strong> El vértice está fuera de C y <strong>entra en el cierre</strong>. Desde p se buscan las dos <strong>rectas tangentes</strong> a C (una hacia atrás y otra hacia delante), se inserta p entre los dos puntos de tangencia y se <strong>borran los vértices de C que quedan entre ellos</strong>, porque han quedado dentro del nuevo cierre. A partir de ahí, p es el nuevo q.</p></li>
+  </ul></li>
+  <li><p>Cuando se han procesado todos los vértices, C es el cierre convexo del polígono.</p></li>
+  </ol>
+  <p>En el artículo original [1] y en [3], C se guarda en una <strong>cola doble</strong> (deque) con q en sus dos extremos: así los dos vecinos de q están siempre en las puntas de la cola y añadir o quitar vértices cuesta tiempo constante.</p>
+  <h3>El test de orientación</h3>
+  <p>Todas las decisiones del algoritmo se toman con una sola operación: el <strong>signo del área del triángulo</strong> formado por tres puntos p1, p2, p3 [2], [3]:</p>
+  <p style="text-align: center;">Δ(p1, p2, p3) = (x2 − x1)·(y3 − y1) − (x3 − x1)·(y2 − y1)</p>
+  <ul>
+  <li><p>Δ &gt; 0: al recorrer p1 → p2 → p3 se gira a la izquierda (sentido antihorario).</p></li>
+  <li><p>Δ &lt; 0: se gira a la derecha (sentido horario).</p></li>
+  <li><p>Δ = 0: los tres puntos están alineados.</p></li>
+  </ul>
+  <p>Si O es el signo del triángulo inicial (su orientación), la condición para que p esté en R_q es [2]:</p>
+  <p style="text-align: center;">O · Δ(q, POSTERIOR(q), p) ≥ 0</p>
+  <p style="text-align: center;">O · Δ(ANTERIOR(q), q, p) ≥ 0</p>
+  <p>Multiplicar por O hace que el algoritmo funcione igual si el polígono se recorre en sentido horario o antihorario.</p>
+  <h3>Ejemplo paso a paso</h3>
+  <p>Tomamos el polígono de vértices v0, …, v6, en este orden:</p>
+  <p style="text-align: center;">(0,0) → (4,0) → (2,1) → (4,4) → (0,4) → (1,3) → (3,3)</p>
+  <ol type="1">
+  <li><p><strong>Paso 0, inicio:</strong> triángulo v0, v1, v2. C = {(0,0), (4,0), (2,1)}.</p></li>
+  <li><p><strong>Paso 1, v3 = (4,4): caso 2.</strong> Está fuera de C. Al añadirlo, v2 = (2,1) queda dentro del nuevo cierre y se borra. C = {(0,0), (4,0), (4,4)}.</p></li>
+  <li><p><strong>Paso 2, v4 = (0,4): caso 2.</strong> Está fuera de C y entra. No se borra nada. C = {(0,0), (4,0), (4,4), (0,4)}.</p></li>
+  <li><p><strong>Paso 3, v5 = (1,3): caso 1.</strong> Cae en R_q (dentro del cuadrado) y se descarta.</p></li>
+  <li><p><strong>Paso 4, v6 = (3,3): caso 1.</strong> También cae en R_q y se descarta.</p></li>
+  </ol>
+  <p><strong>Resultado:</strong> el cierre convexo es el cuadrado (0,0), (4,0), (4,4), (0,4). Los vértices v2, v5 y v6 quedan dentro.</p>
+  <figure style="text-align: center;">
+    <img src="img/fig2_ejemplo.png" alt="Ejemplo del algoritmo de Melkman paso a paso" width="650">
+    <figcaption><i>Figura 2. Ejemplo paso a paso, con los mismos colores que la applet: cierre C en verde, región R_q en morado (con q marcado), vértice añadido en azul, vértice descartado en rojo, vértice borrado con una cruz naranja y vértices aún sin leer en gris.</i></figcaption>
+  </figure>
+  <h3>Complejidad</h3>
+  <p>Comprobar si un vértice está en R_q cuesta <strong>tiempo constante</strong>: son dos cálculos de Δ.</p>
+  <p>Buscar las tangentes puede recorrer varios vértices de C, pero <strong>cada vértice recorrido se borra</strong>, y cada vértice del polígono <strong>entra en C una sola vez y sale como mucho una vez</strong> [1], [3]. Por tanto:</p>
+  <p style="text-align: center;">T(n) = Σ (trabajo en cada vértice) = O(n)</p>
 
-  <!-- ===== ADRI ===== -->
+  </section>
+
+  <section id="instrucciones">
   <h2>Instrucciones</h2>
   <p>Nuestra applet calcula paso a paso el cierre convexo de un polígono simple  con el algoritmo de Melkman.
     Para usarla:</p>
@@ -33,6 +248,9 @@
 
     <li></li>
   </ol>
+  </section>
+
+  <section id="applet-seccion">
   <h2>Applet</h2>
   <div id="applet">Cargando applet...</div>
 
@@ -67,11 +285,74 @@
     });
   </script>
 
-  <!-- ===== LOLA ===== -->
-  <h2>Discusión y aplicaciones reales</h2>
-  <p>...</p>
+  </section>
 
-  <!-- ===== ADRI ===== -->
+  <section id="discusion">
+  <h2>Discusión y aplicaciones reales</h2>
+  <h3>Comparación con los algoritmos vistos en clase</h3>
+  <table style="border-collapse: collapse; margin: 1em 0;">
+    <tr><th style="border: 1px solid #bbb; padding: 4px 8px; background: #2e8b57; color: white; text-align: left;">Algoritmo</th><th style="border: 1px solid #bbb; padding: 4px 8px; background: #2e8b57; color: white; text-align: left;">Coste</th><th style="border: 1px solid #bbb; padding: 4px 8px; background: #2e8b57; color: white; text-align: left;">Idea</th></tr>
+    <tr><td colspan="3" style="border: 1px solid #bbb; padding: 4px 8px; background: #d9ebe1; color: #1f5f3f;"><b>Para nubes de puntos (sirven también para polígonos)</b></td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Fuerza bruta</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n⁴) / O(n³)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Eliminar puntos no extremos / buscar aristas extremas</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Marcha de Jarvis</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n·k), peor O(n²)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Envolver: desde un punto del cierre, buscar el siguiente (k = vértices del cierre)</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Graham</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n log n)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Ordenar por ángulo y recorrer con una pila, quitando giros a la derecha</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Quickhull</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Mejor O(n), peor O(n²)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Como QuickSort: dividir por la recta de dos extremos y descartar el interior</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Incremental</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n²) (O(n log n) si se ordena antes)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Añadir puntos uno a uno y rehacer el cierre con dos tangentes</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Divide y vencerás</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n log n)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Como MergeSort: dos mitades y unir con las tangentes superior e inferior</td></tr>
+    <tr><td colspan="3" style="border: 1px solid #bbb; padding: 4px 8px; background: #d9ebe1; color: #1f5f3f;"><b>Específicos para polígonos</b></td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Graham sin ordenar</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Graham sin la ordenación; falla si hay bolsillos</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px;">Lee</td><td style="border: 1px solid #bbb; padding: 4px 8px;">O(n)</td><td style="border: 1px solid #bbb; padding: 4px 8px;">Graham + control de bolsillos; parte de x_min y x_max; 5 casos</td></tr>
+    <tr><td style="border: 1px solid #bbb; padding: 4px 8px; background: #e8f5ee;"><b>Melkman</b></td><td style="border: 1px solid #bbb; padding: 4px 8px; background: #e8f5ee;"><b>O(n)</b></td><td style="border: 1px solid #bbb; padding: 4px 8px; background: #e8f5ee;"><b>Incremental aprovechando el orden; cualquier vértice inicial; 2 casos</b></td></tr>
+  </table>
+  <p>Todos los algoritmos se han visto en el Tema 2 [2]. Los del primer grupo trabajan con una nube de puntos cualquiera: se pueden usar con los vértices de un polígono, pero no aprovechan que vienen ordenados. Por eso los mejores (Graham y divide y vencerás) se quedan en O(n log n), el mínimo posible para nubes de puntos [10].</p>
+  <p>Los del segundo grupo sí aprovechan el orden de los vértices y bajan a O(n):</p>
+  <ul>
+  <li><p><strong>Graham sin ordenar</strong> [2] solo comprueba tres vértices seguidos, así que no detecta cuándo el polígono «vuelve» por dentro de un bolsillo y puede dar un resultado incorrecto.</p></li>
+  <li><p><strong>Lee</strong> [2], [8] corrige ese problema: localiza primero los vértices de x mínima y x máxima, divide el polígono en dos cadenas y, para saltar los bolsillos, distingue <strong>5 casos</strong> (regiones A, B, C y D).</p></li>
+  <li><p><strong>Melkman</strong> [1], [2] es una modificación del <strong>algoritmo incremental</strong>. En el incremental para nubes de puntos, cada punto nuevo puede caer en cualquier sitio y hay que comprobar si está dentro del cierre y buscar sus tangentes recorriendo todo el cierre. En un polígono simple, el siguiente vértice solo puede salir del cierre «cerca» del último añadido, q: basta mirar la región R_q (dos cálculos de Δ) y empezar a buscar las tangentes desde q. Además, como en Graham, va quitando vértices mientras no haya giro a la izquierda, pero <strong>por los dos lados</strong> de C. Por eso empieza por <strong>cualquier vértice</strong> y solo tiene <strong>2 casos</strong> [10].</p></li>
+  </ul>
+  <h3>Un poco de historia</h3>
+  <p>El cierre convexo de un polígono en tiempo lineal es un problema con una historia curiosa: <strong>muchos de los algoritmos publicados eran incorrectos</strong> [10].</p>
+  <ul>
+  <li><p><strong>Sklansky (1972)</strong> propuso el primer algoritmo en O(n), pero más tarde se demostró que no siempre funciona [9], [10].</p></li>
+  <li><p>De los 16 algoritmos lineales que recopila Aloupis entre 1972 y 1989, <strong>7 resultaron incorrectos</strong> [10].</p></li>
+  <li><p><strong>McCallum y Avis (1979)</strong> dieron el primer algoritmo correcto, aunque complicado: usa dos pilas y un análisis de casos enrevesado [6], [9].</p></li>
+  <li><p>En <strong>1983</strong> aparecieron los de <strong>Lee</strong> [8] y <strong>Graham y Yao</strong> [9]. Ambos necesitan conocer de antemano vértices del cierre, como los de x mínima y máxima.</p></li>
+  <li><p><strong>Melkman (1987)</strong> [1] se considera el mejor de todos: es el más sencillo, son pocas líneas de código y el artículo cabe en las dos caras de una hoja [10].</p></li>
+  </ul>
+  <h3>Ventajas del algoritmo de Melkman</h3>
+  <ul>
+  <li><p><strong>Es «on-line»:</strong> procesa los vértices a medida que llegan y en cada momento tiene el cierre de los vértices leídos [1], [10]. No necesita conocer el polígono entero desde el principio.</p></li>
+  <li><p><strong>No necesita un punto extremo</strong> para empezar: sirve cualquier vértice [10].</p></li>
+  <li><p><strong>No necesita saber la orientación</strong> del polígono: el signo O del triángulo inicial lo resuelve [10].</p></li>
+  <li><p><strong>Funciona también con poligonales abiertas</strong> (cadenas de segmentos que no se cierran), siempre que no se crucen [3], [5].</p></li>
+  <li><p><strong>Es muy sencillo:</strong> solo dos casos y una única operación geométrica, el signo Δ.</p></li>
+  </ul>
+  <h3>Limitaciones</h3>
+  <p><strong>1. Solo funciona con polígonos simples.</strong> Toda la idea de R_q se basa en que el polígono no se cruza a sí mismo: un vértice en R_q está «escondido» detrás de C porque el borde no puede atravesar C para salir. Si el polígono se cruza, esto deja de ser cierto. Por ejemplo, con la «pajarita» de la Figura 3, el vértice v3 cae en R_q, se descarta y el resultado es un triángulo en lugar del cuadrado. La librería DGtal avisa de lo mismo: con poligonales que se cortan, el resultado no está definido [5].</p>
+  <figure style="text-align: center;">
+    <img src="img/fig3_pajarita.png" alt="Polígono que se cruza a sí mismo y resultado de Melkman" width="450">
+    <figcaption><i>Figura 3. Polígono que se cruza a sí mismo («pajarita»). Melkman descarta v3 (rojo) y devuelve un cierre incorrecto.</i></figcaption>
+  </figure>
+  <p><strong>2. Los tres primeros vértices alineados.</strong> Si p1, p2 y q están alineados, O = 0 y todas las comprobaciones dan 0: con el pseudocódigo de clase [2], el algoritmo se queda en un bucle infinito. En nuestra implementación lo resolvemos descartando el vértice del medio (que está entre los otros dos y no puede ser vértice del cierre) y cogiendo el siguiente, hasta formar un triángulo de verdad.</p>
+  <p><strong>3. Precisión numérica.</strong> Con coordenadas decimales, un Δ que debería ser 0 puede salir ligeramente positivo o negativo por el redondeo, y un punto alineado se puede clasificar mal. Con coordenadas enteras o racionales el cálculo es exacto.</p>
+  <p><strong>4. Estructura de datos.</strong> Para que el coste sea realmente O(n), C tiene que ser una cola doble, como en [1], [3] y [5]. En nuestra applet usamos una lista de Python con ANTERIOR y POSTERIOR, como en los apuntes [2]: buscar, insertar o borrar en una lista cuesta tiempo proporcional a su tamaño. Para los polígonos de la applet la diferencia no se nota.</p>
+  <h3>Aplicaciones reales</h3>
+  <p>El cierre convexo es una de las construcciones más usadas de la geometría computacional. Estas son algunas aplicaciones, empezando por las que usan Melkman directamente:</p>
+  <ul>
+  <li><p><strong>Librerías de geometría.</strong> Melkman está implementado en librerías profesionales. CGAL, una de las librerías de geometría computacional más usadas, ofrece la función ch_melkman para polígonos y poligonales simples, en tiempo lineal [15]. DGtal, librería de geometría digital, tiene la clase MelkmanConvexHull, que añade los puntos uno a uno [5].</p></li>
+  <li><p><strong>Como pieza de otros algoritmos.</strong> Algunos algoritmos para nubes de puntos primero construyen un polígono simple que pasa por los puntos y después le aplican Melkman para obtener el cierre, aprovechando que no necesita preprocesado y recorre los vértices una sola vez [16].</p></li>
+  <li><p><strong>Visión por ordenador.</strong> El contorno de un objeto en una imagen es una cadena de píxeles en orden que no se cruza, justo la entrada de Melkman. Comparando el contorno de una mano con su cierre convexo se obtienen los «defectos de convexidad» (los huecos entre los dedos), y con ellos se cuentan los dedos levantados y se reconocen gestos [17].</p></li>
+  <li><p><strong>Diseño gráfico y CAD.</strong> Una curva de Bézier (las que se usan en programas de diseño, tipografías y CAD) queda siempre dentro del cierre convexo de sus puntos de control [18]. Como los puntos de control forman una poligonal ordenada, su cierre se puede calcular con Melkman y usarse como «caja» rápida: si los cierres de dos curvas no se cortan, las curvas tampoco.</p></li>
+  <li><p><strong>Medidas de una forma.</strong> Una vez calculado el cierre, se pueden obtener medidas como el diámetro (la mayor distancia entre dos puntos) o la anchura, usando los pares antipodales del cierre [2].</p></li>
+  <li><p><strong>Datos que llegan en tiempo real.</strong> Como es on-line, Melkman puede mantener el cierre de un trazo que se está dibujando en una tableta, o del recorrido de un robot, a medida que llegan los puntos y sin recalcular todo desde cero (siempre que el trazo no se cruce).</p></li>
+  <li><p><strong>Ecología.</strong> El área de campeo de un animal se estima a menudo con el «mínimo polígono convexo»: el cierre convexo de las posiciones registradas por su collar GPS [19]. Aquí el recorrido del animal se cruza consigo mismo muchas veces, así que no sirve Melkman y hay que usar un algoritmo para nubes de puntos, como Graham: es un buen ejemplo de cuándo elegir cada algoritmo.</p></li>
+  <li><p><strong>Detección de colisiones y planificación de rutas</strong> (videojuegos, simulación, robótica). Los objetos y obstáculos se aproximan por su cierre convexo, porque comprobar si dos polígonos convexos se tocan, o calcular un camino que los rodee, es mucho más sencillo que con polígonos cualesquiera.</p></li>
+  </ul>
+
+  </section>
+
+  <section id="bibliografia">
   <h2>Bibliografía</h2>
 
   <h3>Algoritmo de Melkman</h3>
@@ -104,5 +385,14 @@
     <li>SageMathCell. <a href="https://sagecell.sagemath.org">sagecell.sagemath.org</a></li>
   </ol>
 
+  </section>
+
+  <section id="uso-ia">
+  <h2>Uso de inteligencia artificial</h2>
+  <p>Hemos utilizado <b>Claude</b>, el asistente de inteligencia artificial de <b>Anthropic</b>, para mejorar el diseño de la web (fondo, colores, tipos y tamaños de letra) y para generar las imágenes que aparecen en ella.</p>
+  </section>
+  </main>
+
+  <footer>Lola Mancebo Olivares · Adriana Lorenzo — Geometría Computacional, Universidad Pontificia Comillas (ICAI), 2026-2027</footer>
 </body>
 </html>
