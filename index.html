@@ -15,12 +15,28 @@
 
   <!-- ===== ADRI ===== -->
   <h2>Instrucciones</h2>
-  <p>...</p>
+  <p>Nuestra applet calcula paso a paso el cierre convexo de un polígono simple  con el algoritmo de Melkman.
+    Para usarla:</p>
 
+  <ol>
+    <li><b>Pulsa "Lanzar applet interactiva ahora".</b> El código se ejecuta en el servidor de SageMathCell,
+    así que hace falta conexión a internet y puede tardar unos segunos en aparecer.</li>
+
+    <li><b>Elige un polígono</b> en el menú <i>Polígono</i>. HEmos desarollado cuatro ejemplos distintos, ordenados de más fácil a más difícil:
+      <ul>
+        <li><i>Convexo</i>: el cierre es el propio polígono.</li>
+        <li><i>Estrella</i>: los vértices interiores se descartan.</li>
+        <li><i>Ciudad</i>: muchos bolsillos pequeños entre edificios.</li>
+        <li><i>Caracol</i>: euna espiral, con muchos vértices dentro del cierre.</li>
+      </ul>
+    </li>
+
+    <li></li>
+  </ol>
   <h2>Applet</h2>
   <div id="applet">Cargando applet...</div>
 
-  <!-- Lee el código de Lola y de Adri (.ipynb o .sage), lo junta y crea la celda de Sage -->
+  <!--Leemos los código de ambas (.ipynb o .sage), los juntamos y creamos la celda de Sage -->
   <script>
     // Si es un notebook (.ipynb) coge solo las celdas de código, saltándose las que empiezan por "# PRUEBA".
     // Si es un .sage lo coge tal cual.
