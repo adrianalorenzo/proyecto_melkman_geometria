@@ -235,19 +235,50 @@
 
   <ol>
     <li><b>Pulsa "Lanzar applet interactiva ahora".</b> El código se ejecuta en el servidor de SageMathCell,
-    así que hace falta conexión a internet y puede tardar unos segunos en aparecer.</li>
+    así que hace falta conexión a internet y puede tardar unos segundos en aparecer.</li>
 
-    <li><b>Elige un polígono</b> en el menú <i>Polígono</i>. HEmos desarollado cuatro ejemplos distintos, ordenados de más fácil a más difícil:
+    <li><b>Elige un polígono</b> en el menú <i>Polígono</i>. Hemos desarrollado cuatro ejemplos distintos, ordenados de más fácil a más difícil:
       <ul>
         <li><i>Convexo</i>: el cierre es el propio polígono.</li>
         <li><i>Estrella</i>: los vértices interiores se descartan.</li>
         <li><i>Ciudad</i>: muchos bolsillos pequeños entre edificios.</li>
-        <li><i>Caracol</i>: euna espiral, con muchos vértices dentro del cierre.</li>
+        <li><i>Caracol</i>: una espiral, con muchos vértices dentro del cierre.</li>
       </ul>
     </li>
 
-    <li></li>
+    <li><b>O introduce tu propio polígono:</b> elige <i>Personalizado</i> y escribe los vértices en la caja
+      <i>Coordenadas</i> como una lista de pares, por ejemplo:
+      <pre>[(0,0), (4,0), (4,3), (2,1), (0,3)]</pre>
+      Para que el algoritmo funcione:
+      <ul>
+        <li>Los vértices deben ir <b>en orden</b>, recorriendo el borde del polígono, en sentido horario o antihorario.</li>
+        <li>El polígono debe ser <b>simple</b>: sus lados no pueden cortarse entre sí.</li>
+        <li>Debe tener al menos 3 vértices, sin repetir ninguno, y los 3 primeros no pueden estar alineados.</li>
+      </ul>
+      Si alguna condición no se cumple, la applet muestra un aviso en lugar del dibujo.
+    </li>
+
+    <li><b>Mueve el deslizador <i>Paso</i></b> para avanzar o retroceder en el algoritmo. Se ajusta solo al número de pasos de cada polígono: el paso 0 es el triángulo inicial (v0, v1, v2), y en cada paso siguiente se procesa un vértice nuevo.</li>
+
+    <li><b>Lee el panel de texto</b> que hay encima del dibujo. Indica la deque C antes del paso, el vértice q (el último añadido al cierre), si el vértice nuevo está o no en R_q, los vértices que se eliminan y cómo queda la deque después. En el último paso indica también cuántos vértices tiene el cierre.</li>
   </ol>
+
+  <h3>Qué significa cada color</h3>
+  <ul>
+    <li><b style="color:purple">Morado</b>: la región R_q y el vértice q. Si el vértice nuevo cae dentro de R_q, no puede estar en el cierre.</li>
+    <li><b style="color:green">Verde</b>: el cierre convexo después del paso.</li>
+    <li><b>Negro</b>: la parte del polígono ya recorrida.</li>
+    <li><b style="color:gray">Gris (discontinuo)</b>: la parte del polígono que aún no se ha leído.</li>
+    <li><b style="color:red">Rojo</b>: el vértice nuevo está en R_q y <b>se descarta</b>.</li>
+    <li><b style="color:blue">Azul</b>: el vértice nuevo está fuera de R_q y <b>entra en el cierre</b>.</li>
+    <li><b style="color:orange">Naranja</b>: los vértices que salen del cierre en ese paso.</li>
+  </ul>
+
+  <figure style="text-align: center;">
+    <img src="img/fig4_applet.png" alt="La applet en el paso 4 del ejemplo Estrella" width="600">
+    <figcaption><i>Figura 4. La applet en funcionamiento.</i></figcaption>
+  </figure>
+
   </section>
 
   <section id="applet-seccion">
@@ -277,7 +308,8 @@
       sagecell.makeSagecell({
         inputLocation: '#applet',
         code: codigoLola + '\n\n' + codigoAdri,
-        evalButtonText: 'Lanzar applet interactiva ahora'
+        evalButtonText: 'Lanzar applet interactiva ahora',
+        hide: ['editor', 'fullScreen', 'language', 'permalink']
       });
     }).catch(() => {
       document.getElementById('applet').innerHTML =
