@@ -369,6 +369,22 @@ canvas { max-width: 100%; }
   .mk-ctrl .mk-speed { margin-left: 0; }
 }
 
+#applet .sagecell_evalButton { display: none !important; }
+button.mk-wait { all: unset; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; cursor: pointer; padding: 54px 24px; text-align: center; border: 1px dashed #2a3554; border-radius: 16px; transition: .2s; }
+button.mk-wait:hover { border-color: var(--green); background: rgba(57,255,20,.04); box-shadow: 0 0 30px rgba(57,255,20,.15) inset; }
+button.mk-wait:focus-visible { border-color: var(--cyan); }
+button.mk-wait .pulse { width: 74px; height: 74px; margin: 0 0 6px; background: var(--green); color: #000; border: 0; }
+button.mk-wait .lbl { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 1.2rem; color: #fff; }
+button.mk-wait .sm { font-size: .86rem; color: var(--muted); }
+button.mk-wait .calc { display: none; }
+button.mk-wait.cargando { cursor: progress; }
+button.mk-wait.cargando .listo { display: none; }
+button.mk-wait.cargando .calc { display: inline; }
+html[data-lang="es"] button.mk-wait.cargando .calc .en, html[data-lang="en"] button.mk-wait.cargando .calc .es { display: none; }
+button.mk-wait.cargando .pulse { background: transparent; color: var(--green); border: 3px solid rgba(57,255,20,.25); border-top-color: var(--green); animation: gira .9s linear infinite; box-shadow: none; }
+button.mk-wait.cargando .pulse svg { display: none; }
+@keyframes gira { to { transform: rotate(360deg); } }
+
   </style>
 </head>
 <body>
@@ -650,11 +666,13 @@ canvas { max-width: 100%; }
   <div class="block g reveal">
     <div id="applet"><span class="es">Cargando applet...</span><span class="en">Loading applet...</span></div>
     <div id="applet-player">
-      <div class="mk-wait">
-        <div class="pulse"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></div>
-        <div class="es">Pulsa <b>«Lanzar applet interactiva ahora»</b>. Cuando SageMath termine el cálculo, el reproductor aparecerá aquí.</div>
-        <div class="en">Press <b>"Launch interactive applet now"</b>. When SageMath finishes the computation, the player will appear here.</div>
-      </div>
+      <button type="button" class="mk-wait" id="applet-launch">
+        <span class="pulse"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></span>
+        <span class="lbl listo"><span class="es">Lanzar applet interactiva ahora</span><span class="en">Launch interactive applet now</span></span>
+        <span class="lbl calc"><span class="es">SageMath está calculando…</span><span class="en">SageMath is computing…</span></span>
+        <span class="sm listo"><span class="es">SageMath calcula el cierre y aquí lo verás paso a paso</span><span class="en">SageMath computes the hull and you will watch it here step by step</span></span>
+        <span class="sm calc"><span class="es">Puede tardar unos segundos</span><span class="en">It may take a few seconds</span></span>
+      </button>
     </div>
   </div>
 </section>
@@ -1904,8 +1922,14 @@ function appletSage() {
       evalButtonText: textoBoton(),
       hide: ['editor', 'fullScreen', 'language', 'permalink']
     });
-    onLang.push(() => { const b = caja.querySelector('.sagecell_evalButton'); if (b) b.textContent = textoBoton(); });
+    
     new MutationObserver(() => MelkmanPlayer.scan()).observe(caja, { childList: true, subtree: true });
+    // El botón grande lanza la celda de SageMath (su propio botón está oculto)
+    const lanzar = $('applet-launch');
+    if (lanzar) lanzar.addEventListener('click', () => {
+      const b = caja.querySelector('.sagecell_evalButton'); if (!b || lanzar.classList.contains('cargando')) return;
+      lanzar.classList.add('cargando'); b.click();
+    });
   }).catch(() => aviso('No se pudo cargar el código (abre la web desde GitHub Pages o con un servidor local).', 'The code could not be loaded (open the site from GitHub Pages or with a local server).'));
 }
 
