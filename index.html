@@ -407,7 +407,7 @@ button.mk-wait.fallo .sm.listo { display: none; }
 .code-top .ib:hover { color: var(--cyan); border-color: var(--cyan); }
 .code-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
 @media (max-width: 900px) { .code-body { grid-template-columns: 1fr; } }
-.code-pane { max-height: 540px; overflow: auto; background: var(--code-bg); font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: .82rem; line-height: 1.62; padding: 10px 0; }
+.code-pane { position: relative; max-height: 540px; overflow: auto; background: var(--code-bg); font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: .82rem; line-height: 1.62; padding: 10px 0; }
 .code-card:fullscreen .code-pane { max-height: calc(100vh - 60px); font-size: .95rem; }
 .code-line { display: grid; grid-template-columns: 44px 1fr; white-space: pre; padding-right: 16px; transition: background .25s, opacity .25s; min-height: 1.62em; }
 .code-line .ln { color: var(--muted); opacity: .55; text-align: right; padding-right: 14px; user-select: none; }
@@ -425,17 +425,6 @@ button.mk-wait.fallo .sm.listo { display: none; }
 .code-steps li.on { border-color: var(--green); box-shadow: 0 0 14px rgba(var(--green-rgb), .2); }
 .code-steps li b.n { font-family: "JetBrains Mono", monospace; color: var(--green); margin-right: 6px; }
 .code-side code { font-size: .82em; }
-.dbg-stage { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--s0); }
-.dbg-stage canvas { display: block; width: 100%; }
-.dbg-text { line-height: 1.55; min-height: 4.7em; }
-.dbg-vars { display: grid; grid-template-columns: 70px 1fr; gap: 5px 8px; align-items: center; font-size: .8rem; }
-.dbg-vars .lab { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: .74rem; }
-.dbg-ctrl { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.dbg-ctrl .ib { all: unset; cursor: pointer; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: var(--text2); border: 1px solid var(--line2); background: var(--s3); }
-.dbg-ctrl .ib:hover { color: var(--cyan); border-color: var(--cyan); }
-.dbg-ctrl .ib.play { width: 38px; height: 38px; border-radius: 50%; background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 0 14px rgba(var(--green-rgb), .5); }
-.dbg-ctrl input[type=range] { flex: 1; min-width: 90px; }
-.dbg-ctrl .cnt { font-family: "JetBrains Mono", monospace; font-size: .74rem; color: var(--muted); }
 .vchip.s { border-color: var(--yellow); color: var(--yellow); } .vchip.t { border-color: var(--pink); color: var(--pink); }
 .vchip.p { border-color: var(--cyan); color: var(--cyan); }
 .pipe { display: flex; flex-wrap: wrap; align-items: stretch; gap: 6px; margin: 4px 0 16px; }
@@ -449,6 +438,22 @@ button.mk-wait.fallo .sm.listo { display: none; }
 .pnode .sub span { font-family: "JetBrains Mono", monospace; font-size: .68rem; border: 1px dashed var(--line2); border-radius: 6px; padding: 0 5px; color: var(--text2); }
 .pnode .sub span.on { border-style: solid; border-color: var(--green); color: var(--green); }
 .leg-line { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+
+/* botón «Implementación en código» */
+.impl { margin-top: 18px; }
+.impl-btn { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 16px; border-radius: 12px;
+  border: 1px dashed var(--line2); background: var(--s1); color: var(--text2); transition: .18s; flex-wrap: wrap; }
+.impl-btn:hover { border-color: var(--cyan); color: var(--text); box-shadow: 0 0 16px rgba(var(--cyan-rgb, 0,229,255), .18); }
+.impl-btn .ic { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: .85rem; color: #000; background: var(--cyan); border-radius: 7px; padding: 3px 8px; box-shadow: 0 0 12px rgba(var(--cyan-rgb, 0,229,255), .45); }
+.impl-btn .tx { font-weight: 600; }
+.impl-btn .fl { font-family: "JetBrains Mono", monospace; font-size: .72rem; color: var(--muted); flex: 1; min-width: 0; }
+.impl-btn .chev { transition: transform .25s; color: var(--cyan); }
+.impl.open .impl-btn { border-style: solid; border-color: var(--cyan); border-radius: 12px 12px 0 0; }
+.impl.open .impl-btn .chev { transform: rotate(180deg); }
+.impl-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+.impl.open .impl-panel { grid-template-rows: 1fr; }
+.impl-in { overflow: hidden; min-height: 0; }
+.impl.open .impl-in .code-card { border-top: 0; border-radius: 0 0 16px 16px; border-color: var(--cyan); }
 
   </style>
 </head>
@@ -575,6 +580,7 @@ button.mk-wait.fallo .sm.listo { display: none; }
     </div>
     <p class="es" style="margin-top:14px">En el artículo original<sup class="ref">[<a href="#ref1">1</a>]</sup> y en <sup class="ref">[<a href="#ref3">3</a>]</sup>, C se guarda en una <strong>cola doble</strong> (deque) con q en sus dos extremos: así los dos vecinos de q están siempre en las puntas de la cola y añadir o quitar vértices cuesta tiempo constante.</p>
     <p class="en" style="margin-top:14px">In the original paper<sup class="ref">[<a href="#ref1">1</a>]</sup> and in <sup class="ref">[<a href="#ref3">3</a>]</sup>, C is stored in a <strong>double-ended queue</strong> (deque) with q at both ends: the two neighbours of q are always at the tips of the queue, so adding or removing vertices takes constant time.</p>
+    <div data-impl="idea"></div>
   </div>
 
   <!-- 1.4 -->
@@ -597,6 +603,7 @@ button.mk-wait.fallo .sm.listo { display: none; }
         <div class="w-bar"><span id="w-delta-info"></span></div>
       </div>
     </div>
+    <div data-impl="signo"></div>
   </div>
 
   <!-- 1.5 -->
@@ -622,15 +629,9 @@ button.mk-wait.fallo .sm.listo { display: none; }
         <div class="w-bar"><span id="w-rq-info"></span></div>
       </div>
     </div>
+    <div data-impl="rq"></div>
   </div>
 
-  <!-- 1.6 código -->
-  <div class="block g reveal" id="codigo-melkman">
-    <h3><span class="es">Implementación en SageMath: melkman.ipynb</span><span class="en">Implementation in SageMath: melkman.ipynb</span></h3>
-    <p class="es">Este es el código de <code>melkman.ipynb</code>, el mismo que ejecuta la applet: la web lo lee directamente del notebook. Elige una función para ver qué hace cada parte. En <code>melkman</code> puedes ejecutar el algoritmo línea a línea y ver cómo cambian las variables.</p>
-    <p class="en">This is the code in <code>melkman.ipynb</code>, the same code the applet runs: the website reads it straight from the notebook. Pick a function to see what each part does. In <code>melkman</code> you can run the algorithm line by line and watch the variables change.</p>
-    <div id="vis-melkman"></div>
-  </div>
 </section>
 
 <!-- ===================== 02 INSTRUCCIONES ===================== -->
@@ -654,6 +655,7 @@ button.mk-wait.fallo .sm.listo { display: none; }
           <li><i><span class="es">Ciudad</span><span class="en">Ciudad (city skyline)</span></i>: <span class="es">muchos bolsillos pequeños entre edificios.</span><span class="en">many small pockets between buildings.</span></li>
           <li><i><span class="es">Caracol</span><span class="en">Caracol (spiral)</span></i>: <span class="es">una espiral, con muchos vértices dentro del cierre.</span><span class="en">a spiral, with many vertices inside the hull.</span></li>
         </ul>
+        <div data-impl="ejemplos"></div>
       </div></div>
       <div class="it"><div class="num">3</div><div>
         <p class="es"><b>O introduce tu propio polígono:</b> elige <i>Personalizado</i> y escribe los vértices en la caja <i>Coordenadas</i> como una lista de pares, por ejemplo:</p>
@@ -878,6 +880,7 @@ button.mk-wait.fallo .sm.listo { display: none; }
       <div class="lim"><div class="n">2</div><div>
         <p class="es"><strong>Los tres primeros vértices alineados.</strong> Si p1, p2 y q están alineados, O = 0 y todas las comprobaciones dan 0: con el pseudocódigo de clase<sup class="ref">[<a href="#ref2">2</a>]</sup>, el algoritmo se queda en un bucle infinito. En nuestra implementación lo resolvemos descartando el vértice del medio (que está entre los otros dos y no puede ser vértice del cierre) y cogiendo el siguiente, hasta formar un triángulo de verdad.</p>
         <p class="en"><strong>The first three vertices are collinear.</strong> If p1, p2 and q are collinear, O = 0 and every test returns 0: with the pseudocode from class<sup class="ref">[<a href="#ref2">2</a>]</sup>, the algorithm gets stuck in an infinite loop. In our implementation we solve it by discarding the middle vertex (it lies between the other two, so it cannot be a hull vertex) and taking the next one, until we get a real triangle.</p>
+        <div data-impl="alineados"></div>
       </div></div>
       <div class="lim"><div class="n">3</div><div>
         <p class="es"><strong>Precisión numérica.</strong> Con coordenadas decimales, un Δ que debería ser 0 puede salir ligeramente positivo o negativo por el redondeo, y un punto alineado se puede clasificar mal. Con coordenadas enteras o racionales el cálculo es exacto.</p>
@@ -1641,7 +1644,7 @@ function rango(lineas, desde, hasta) {   // líneas [i, j] que hay que resaltar:
 
 class VisorCodigo {
   constructor(raiz, o) {
-    this.raiz = raiz; this.o = o; this.tab = o.tabs[0].id; this.hl = null; this.paso = 0;
+    this.raiz = raiz; this.o = o; this.tab = o.tab0 || o.tabs[0].id; this.hl = null; this.paso = 0;
     raiz.innerHTML = `<div class="mk-wait" style="padding:30px">${T('Cargando el código…', 'Loading the code…')}</div>`;
     o.cargar().then(bloques => { this.bloques = bloques; this.montar(); onLang.push(() => this.pintarLado()); })
       .catch(() => { raiz.innerHTML = `<div class="note warn"><p>${T('No se pudo leer el notebook (abre la web desde GitHub Pages o con un servidor local).', 'The notebook could not be read (open the site from GitHub Pages or with a local server).')}</p></div>`; });
@@ -1673,7 +1676,6 @@ class VisorCodigo {
     const html = tab.json ? this.lineas.map(l => resaltarPy(l)[0]) : resaltarPy(this.lineas.join('\n'));
     this.pane.innerHTML = html.map((h, i) => `<div class="code-line"><span class="ln">${i + 1}</span><span>${h || ' '}</span></div>`).join('');
     this.pane.scrollTop = 0;
-    if (this.dep) { this.dep.destruir(); this.dep = null; }
     this.pintarLado();
     if (this.o.alElegir) this.o.alElegir(id);
   }
@@ -1687,11 +1689,6 @@ class VisorCodigo {
   }
   pintarLado() {
     const tab = this.o.tabs.find(t => t.id === this.tab);
-    if (tab.depurador) {
-      if (!this.dep) this.dep = new Depurador(this.lado, this);
-      else this.dep.refrescar();
-      return;
-    }
     const pasos = tab.pasos || [];
     this.lado.innerHTML = `<h4>${tab.titulo || tab.etiqueta}</h4><p>${T(tab.intro[0], tab.intro[1])}</p>` +
       (pasos.length ? `<ol class="code-steps">${pasos.map((p, i) => `<li data-i="${i}"><b class="n">${i + 1}</b>${T(p.t[0], p.t[1])}</li>`).join('')}</ol>` : '') +
@@ -1704,152 +1701,30 @@ class VisorCodigo {
 }
 
 /* =====================================================================
-   DEPURADOR: ejecuta melkman() línea a línea
+   BOTÓN «IMPLEMENTACIÓN EN CÓDIGO»: abre el código de la parte que se acaba de explicar
    ===================================================================== */
-const P_DEPURA = [[1, 2], [6, 4], [6, 6], [7, 0], [4, 3], [0, 0], [0, 3], [1, 5]];
-// Cada evento dice qué líneas del código de melkman() se están ejecutando (por su texto, no por su número)
-const LINEAS_MK = {
-  copia: [/P = list\(P\)/, /pasos = \[\]/], ini3: [/p1 = MIN\(P\)/, /^\s*q = MIN\(P\)/], alin: [/while signo\(p1, p2, q\) == 0/],
-  extend: [/C\.extend/], leer: [/while P != \[\]/, /p = MIN\(P\)/], rqChk: [/while en_Rq/, /while en_Rq/], rq1: [/while en_Rq/],
-  caso2: [/if not en_Rq/, /borrados = \[\]/], back0: [/^\s*s = q\s*$/, /t = ANTERIOR\(s, C\)/], backChk: [/while O\*signo\(t, s, p\)/],
-  insert: [/C\.insert/, /C\.insert/], fwd0: [/s = POSTERIOR\(p, C\)/, /t = POSTERIOR\(s, C\)/], fwdChk: [/while O\*signo\(s, t, p\)/, /while O\*signo\(s, t, p\)/],
-  fwdDel: [/C\.remove\(s\)/], qp: [/^\s*q = p\s*$/], else1: [/^\s*else:/], ret: [/return C, pasos/, /return C, pasos/]
-};
-function trazaMelkman(Pin) {   // misma lógica que melkman.ipynb, guardando el estado en cada línea importante
-  const ev = [], P = Pin.slice(); let C = null, p = null, q = null, s = null, t = null, O = null, borr = [];
-  const foto = (tag, x) => ev.push(Object.assign({ tag, C: C && C.slice(), p, q, s, t, O, resto: P.slice(), borr: borr.slice() }, x || {}));
-  foto('copia');
-  let p1 = P.shift(), p2 = P.shift(); q = P.shift(); foto('ini3', { p1, p2 });
-  while (signo(p1, p2, q) === 0) { p2 = q; q = P.shift(); foto('alin', { p1, p2 }); }
-  C = [p1, p2, q]; O = signo(p1, p2, q); foto('extend');
-  while (P.length) {
-    p = P.shift(); s = t = null; borr = []; foto('leer');
-    for (;;) {
-      const dentro = enRq(p, q, C, O); foto('rqChk', { dentro, Rq: regionRq(q, C, O, 60), ultimo: !P.length });
-      if (!(dentro && P.length)) break;
-      const d = p; p = P.shift(); foto('rq1', { desc: d });
-    }
-    if (!enRq(p, q, C, O)) {
-      foto('caso2');
-      s = q; t = ANTERIOR(s, C); foto('back0');
-      for (;;) { const val = O * signo(t, s, p); foto('backChk', { val }); if (val > 0) break; s = t; t = ANTERIOR(s, C); }
-      C.splice(C.indexOf(s) + 1, 0, p); foto('insert');
-      s = POSTERIOR(p, C); t = POSTERIOR(s, C); foto('fwd0');
-      for (;;) { const val = O * signo(s, t, p); foto('fwdChk', { val }); if (val > 0) break; const b = s; C.splice(C.indexOf(s), 1); borr.push(b); s = t; t = POSTERIOR(s, C); foto('fwdDel', { borrado: b }); }
-      q = p; s = t = null; foto('qp');
-    } else foto('else1', { desc: p });
-  }
-  p = s = t = null; foto('ret');
-  return ev;
-}
-
-class Depurador {
-  constructor(lado, visor) {
-    this.lado = lado; this.visor = visor; this.ev = trazaMelkman(P_DEPURA); this.k = visor.pasoDep || 0; this.jugando = false; this.vivo = true;
-    lado.innerHTML = `
-      <h4>melkman(P)</h4>
-      <p class="dbg-intro"></p>
-      <div class="dbg-stage"><canvas></canvas></div>
-      <div class="dbg-ctrl">
-        <button class="ib" data-a="first" type="button">${ICO.first}</button>
-        <button class="ib" data-a="prev" type="button">${ICO.prev}</button>
-        <button class="ib play" data-a="play" type="button">${ICO.play}</button>
-        <button class="ib" data-a="next" type="button">${ICO.next}</button>
-        <input type="range" min="0" max="${this.ev.length - 1}" value="0"><span class="cnt"></span>
-      </div>
-      <div class="dbg-text"></div>
-      <div class="dbg-vars"></div>`;
-    this.vista = new Vista(lado.querySelector('canvas'), 250);
-    this.rangoEl = lado.querySelector('input[type=range]'); this.playEl = lado.querySelector('[data-a=play]');
-    lado.querySelectorAll('.dbg-ctrl [data-a]').forEach(b => b.addEventListener('click', () => this.accion(b.dataset.a)));
-    this.rangoEl.addEventListener('input', () => { this.parar(); this.ir(+this.rangoEl.value); });
-    alRedimensionar(lado.querySelector('.dbg-stage'), () => { if (this.vivo) { this.vista.ajustar(); this.encajar(); this.dibujar(); } });
-    this.encajar(); this.ir(this.k);
-  }
-  destruir() { this.vivo = false; this.parar(); }
-  encajar() { this.vista.limites(P_DEPURA, 26); }
-  accion(a) {
-    if (a === 'play') { if (this.jugando) return this.parar(); if (this.k >= this.ev.length - 1) this.k = -1; this.jugando = true; this.playEl.innerHTML = ICO.pause; return this.tic(); }
-    this.parar();
-    if (a === 'first') this.ir(0); else if (a === 'prev') this.ir(Math.max(0, this.k - 1)); else if (a === 'next') this.ir(Math.min(this.ev.length - 1, this.k + 1));
-  }
-  tic() { if (!this.jugando || !this.vivo) return; if (this.k >= this.ev.length - 1) return this.parar(); this.ir(this.k + 1); this._t = setTimeout(() => this.tic(), 1500); }
-  parar() { this.jugando = false; clearTimeout(this._t); if (this.playEl) this.playEl.innerHTML = ICO.play; }
-  refrescar() { this.ir(this.k); }
-  ir(k) {
-    this.k = k; this.visor.pasoDep = k; const e = this.ev[k];
-    this.rangoEl.value = k; this.lado.querySelector('.cnt').textContent = (k + 1) + ' / ' + this.ev.length;
-    this.lado.querySelector('.dbg-intro').innerHTML = T(`Ejecutamos <code>melkman</code> con el polígono del dibujo, de ${P_DEPURA.length} vértices. La línea resaltada es la que se está ejecutando.`,
-      `We run <code>melkman</code> on the polygon in the drawing, with ${P_DEPURA.length} vertices. The highlighted line is the one being executed.`);
-    const l = LINEAS_MK[e.tag]; this.visor.resaltar(l ? rango(this.visor.lineas, l[0], l[1]) : null);
-    this.lado.querySelector('.dbg-text').innerHTML = this.texto(e);
-    this.lado.querySelector('.dbg-vars').innerHTML = this.vars(e);
-    this.dibujar();
-  }
-  n(v) { return v ? nomV(P_DEPURA.indexOf(v)) : '—'; }
-  lista(L, cls) { return L && L.length ? L.map(v => `<span class="vchip ${cls ? cls(v) : ''}">${this.n(v)}</span>`).join('') : '<span class="vchip more">—</span>'; }
-  vars(e) {
-    const ch = (v, c) => `<span class="vchip ${c}">${this.n(v)}</span>`;
-    return `<span class="lab">p</span><div class="vchips">${ch(e.p, 'p')}</div>` +
-      `<span class="lab">q</span><div class="vchips">${ch(e.q, 'q')}</div>` +
-      `<span class="lab">s · t</span><div class="vchips">${ch(e.s, 's')}${ch(e.t, 't')}</div>` +
-      `<span class="lab">O</span><div class="vchips"><span class="vchip">${e.O == null ? '—' : e.O > 0 ? '+ (' + T('antihorario', 'counter-clockwise') + ')' : '− (' + T('horario', 'clockwise') + ')'}</span></div>` +
-      `<span class="lab">C</span><div class="vchips">${this.lista(e.C, v => (v === e.q ? 'q' : v === e.s ? 's' : v === e.t ? 't' : v === e.p ? 'new' : ''))}</div>` +
-      `<span class="lab">${T('P (quedan)', 'P (left)')}</span><div class="vchips">${this.lista(e.resto)}</div>` +
-      `<span class="lab">borrados</span><div class="vchips">${this.lista(e.borr, () => 'del')}</div>`;
-  }
-  texto(e) {
-    const n = v => `<b>${this.n(v)}</b>`, C = L => '[' + (L || []).map(v => this.n(v)).join(', ') + ']';
-    const num = x => (Math.round(x * 100) / 100).toString().replace('.', T(',', '.'));
-    switch (e.tag) {
-      case 'copia': return T('Se hace una copia de P para no vaciar el polígono original: <code>MIN</code> irá sacando vértices de esta copia.', 'P is copied so the original polygon is not emptied: <code>MIN</code> will take vertices out of this copy.');
-      case 'ini3': return T(`<code>MIN</code> saca los tres primeros vértices: p1 = ${n(e.p1)}, p2 = ${n(e.p2)} y q = ${n(e.q)}.`, `<code>MIN</code> takes out the first three vertices: p1 = ${n(e.p1)}, p2 = ${n(e.p2)} and q = ${n(e.q)}.`);
-      case 'alin': return T(`p1, p2 y q estaban alineados (Δ = 0): p2 se descarta y q pasa a ser ${n(e.q)}.`, `p1, p2 and q were collinear (Δ = 0): p2 is dropped and q becomes ${n(e.q)}.`);
-      case 'extend': return T(`El triángulo inicial es el primer cierre: C = ${C(e.C)}. O = Δ(p1, p2, q) ${e.O > 0 ? '&gt; 0: se recorre en sentido antihorario' : '&lt; 0: se recorre en sentido horario'}, y multiplicará todos los tests.`, `The initial triangle is the first hull: C = ${C(e.C)}. O = Δ(p1, p2, q) ${e.O > 0 ? '&gt; 0: counter-clockwise' : '&lt; 0: clockwise'}, and it will multiply every test.`);
-      case 'leer': return T(`Bucle principal: <code>MIN</code> saca el siguiente vértice, p = ${n(e.p)}. Quedan ${e.resto.length} por leer.`, `Main loop: <code>MIN</code> takes the next vertex, p = ${n(e.p)}. ${e.resto.length} left to read.`);
-      case 'rqChk': return e.dentro
-        ? T(`<code>en_Rq</code>: ¿está ${n(e.p)} en la región morada de q = ${n(e.q)}? <b class="c-red">Sí</b>${e.ultimo ? ', pero ya no quedan vértices: se sale del bucle.' : ' → caso 1.'}`, `<code>en_Rq</code>: is ${n(e.p)} in the purple region of q = ${n(e.q)}? <b class="c-red">Yes</b>${e.ultimo ? ', but there are no vertices left: the loop ends.' : ' → case 1.'}`)
-        : T(`<code>en_Rq</code>: ¿está ${n(e.p)} en la región morada de q = ${n(e.q)}? <b class="c-cyan">No</b> → se sale del bucle.`, `<code>en_Rq</code>: is ${n(e.p)} in the purple region of q = ${n(e.q)}? <b class="c-cyan">No</b> → the loop ends.`);
-      case 'rq1': return T(`<b class="c-red">Caso 1:</b> ${n(e.desc)} está escondido detrás de C y se descarta. <code>MIN</code> saca el siguiente: p = ${n(e.p)}.`, `<b class="c-red">Case 1:</b> ${n(e.desc)} is hidden behind C and is discarded. <code>MIN</code> takes the next one: p = ${n(e.p)}.`);
-      case 'caso2': return T(`<b class="c-cyan">Caso 2:</b> ${n(e.p)} está fuera de R_q, así que entra en el cierre. <code>borrados</code> guardará los vértices que salgan de C.`, `<b class="c-cyan">Case 2:</b> ${n(e.p)} is outside R_q, so it joins the hull. <code>borrados</code> will store the vertices that leave C.`);
-      case 'back0': return T(`Tangente hacia atrás: se empieza con s = q = ${n(e.s)} y t = ANTERIOR(s) = ${n(e.t)}.`, `Backward tangent: start with s = q = ${n(e.s)} and t = ANTERIOR(s) = ${n(e.t)}.`);
-      case 'backChk': return e.val <= 0
-        ? T(`O·Δ(t, s, p) = ${num(e.val)} <b class="c-red">≤ 0</b>: p ve el lado t→s desde fuera, así que la tangente no se apoya en s. s retrocede: s = t y t = ANTERIOR(s).`, `O·Δ(t, s, p) = ${num(e.val)} <b class="c-red">≤ 0</b>: p sees side t→s from outside, so the tangent does not rest on s. s moves back: s = t and t = ANTERIOR(s).`)
-        : T(`O·Δ(t, s, p) = ${num(e.val)} <b class="c-green">&gt; 0</b>: giro a la izquierda. La tangente hacia atrás se apoya en s = ${n(e.s)}.`, `O·Δ(t, s, p) = ${num(e.val)} <b class="c-green">&gt; 0</b>: left turn. The backward tangent rests on s = ${n(e.s)}.`);
-      case 'insert': return T(`Se inserta ${n(e.p)} justo después de s: C = ${C(e.C)}.`, `${n(e.p)} is inserted right after s: C = ${C(e.C)}.`);
-      case 'fwd0': return T(`Tangente hacia delante: s = POSTERIOR(p) = ${n(e.s)} y t = POSTERIOR(s) = ${n(e.t)}.`, `Forward tangent: s = POSTERIOR(p) = ${n(e.s)} and t = POSTERIOR(s) = ${n(e.t)}.`);
-      case 'fwdChk': return e.val <= 0
-        ? T(`O·Δ(s, t, p) = ${num(e.val)} <b class="c-red">≤ 0</b>: ${n(e.s)} queda dentro del nuevo cierre y hay que borrarlo.`, `O·Δ(s, t, p) = ${num(e.val)} <b class="c-red">≤ 0</b>: ${n(e.s)} ends up inside the new hull and must be deleted.`)
-        : T(`O·Δ(s, t, p) = ${num(e.val)} <b class="c-green">&gt; 0</b>: la tangente hacia delante se apoya en s = ${n(e.s)}. Ya no se borra nada más.`, `O·Δ(s, t, p) = ${num(e.val)} <b class="c-green">&gt; 0</b>: the forward tangent rests on s = ${n(e.s)}. Nothing else is deleted.`);
-      case 'fwdDel': return T(`<code>C.remove(s)</code>: <b class="c-orange">${this.n(e.borrado)}</b> sale de C y se apunta en <code>borrados</code>. Avanzan s = t y t = POSTERIOR(s).`, `<code>C.remove(s)</code>: <b class="c-orange">${this.n(e.borrado)}</b> leaves C and is added to <code>borrados</code>. s = t and t = POSTERIOR(s) move forward.`);
-      case 'qp': return T(`q = p: ${n(e.q)} es el último vértice añadido. Se guarda el paso (caso 2). C = ${C(e.C)}.`, `q = p: ${n(e.q)} is the last vertex added. The step is saved (case 2). C = ${C(e.C)}.`);
-      case 'else1': return T(`El último vértice, ${n(e.desc)}, estaba en R_q: se guarda como caso 1 y C no cambia.`, `The last vertex, ${n(e.desc)}, was in R_q: it is saved as case 1 and C does not change.`);
-      case 'ret': return T(`P está vacía: se devuelve <b class="c-green">C = ${C(e.C)}</b>, el cierre convexo, y la lista <code>pasos</code> que usa la applet.`, `P is empty: it returns <b class="c-green">C = ${C(e.C)}</b>, the convex hull, and the list <code>pasos</code> used by the applet.`);
-    }
-    return '';
-  }
-  dibujar() {
-    if (!this.vivo) return;
-    const V = this.vista, e = this.ev[this.k], P = P_DEPURA;
-    V.limpiar(); V.rejilla(1);
-    if (e.tag === 'rqChk' && e.Rq) V.relleno(e.Rq, COL.purple, 0.16);
-    const tri = (a, b, c, val) => { const col = val > 0 ? COL.green : COL.red; V.relleno([a, b, c], col, 0.16); V.linea([a, b, c], col, 1.4, { cerrar: true, dash: [5, 4] }); };
-    if (e.tag === 'backChk') tri(e.t, e.s, e.p, e.val);
-    if (e.tag === 'fwdChk') tri(e.s, e.t, e.p, e.val);
-    V.linea(P, COL.gray, 1.2, { cerrar: true, dash: [4, 5] });
-    const leidos = P.length - e.resto.length; if (leidos > 1) V.linea(P.slice(0, leidos), COL.white, 1.6, { alfa: 0.85 });
-    if (e.C) { V.relleno(e.C, COL.green, 0.12); V.linea(e.C, COL.green, 2.6, { cerrar: true, brillo: 12 }); }
-    P.forEach((v, i) => {
-      const enC = e.C && e.C.indexOf(v) >= 0;
-      V.punto(v, enC ? 4.8 : 3.6, enC ? COL.green : i < leidos ? COL.white : COL.gray, { brillo: enC ? 10 : 0 });
-      V.texto(nomV(i), v, COL.label, { dx: 9, dy: -10, tam: 10 });
-    });
-    e.borr.forEach(v => V.aspa(v, 6, COL.orange, 1));
-    if (e.desc) V.aspa(e.desc, 6, COL.red, 1);
-    const anillo = (v, col, txt, r) => { if (!v) return; V.punto(v, r, col, { hueco: 2.4, brillo: 12 }); V.texto(txt, v, col, { dx: -r - 6, dy: r + 4, tam: 12, negrita: true, alin: 'right' }); };
-    anillo(e.q, COL.purple, 'q', 9); anillo(e.s, COL.yellow, 's', 12); anillo(e.t, COL.pink, 't', 15);
-    if (e.p) { const col = e.tag === 'rqChk' && e.dentro ? COL.red : COL.cyan; V.punto(e.p, 6.5, col, { brillo: 16 }); V.texto('p', e.p, col, { dx: 10, dy: 12, tam: 12, negrita: true }); }
-  }
+function botonCodigo(id, o) {
+  const raiz = document.querySelector(`[data-impl="${id}"]`); if (!raiz) return null;
+  raiz.classList.add('impl');
+  raiz.innerHTML = `
+    <button type="button" class="impl-btn" aria-expanded="false">
+      <span class="ic">&lt;/&gt;</span>
+      <span class="tx"><span class="es">Implementación en código</span><span class="en">Code implementation</span></span>
+      <span class="fl">${o.archivo} · ${o.tabs.map(t => t.etiqueta).join(' · ')}</span>
+      <span class="chev">▾</span>
+    </button>
+    <div class="impl-panel"><div class="impl-in"></div></div>`;
+  const btn = raiz.querySelector('.impl-btn'), dentro = raiz.querySelector('.impl-in');
+  let visor = null, abierto = false;
+  const poner = (v, tab) => {
+    abierto = v; raiz.classList.toggle('open', v); btn.setAttribute('aria-expanded', v);
+    if (v && !visor) { if (tab) o.tab0 = tab; visor = new VisorCodigo(dentro, o); }
+    else if (v && tab && visor.bloques) visor.elegir(tab);
+    // cuando termina de abrirse, se vuelve a colocar el código en la zona resaltada
+    if (v) setTimeout(() => { if (visor && visor.bloques && abierto) visor.pintarLado(); }, 420);
+  };
+  btn.addEventListener('click', () => poner(!abierto));
+  return { abrir(tab, ir) { poner(true, tab); if (ir) raiz.scrollIntoView({ behavior: 'smooth', block: 'start' }); } };
 }
 
 /* =====================================================================
@@ -1857,37 +1732,66 @@ class Depurador {
    ===================================================================== */
 function visoresCodigo() {
   const R = (desde, hasta) => ({ desde, hasta });
-  const visMk = new VisorCodigo($('vis-melkman'), {
-    archivo: 'melkman.ipynb', color: 'var(--cyan)', cargar: () => cargarCeldas('melkman.ipynb').then(bloquesPy),
-    tabs: [
-      { id: 'signo', etiqueta: 'signo', bloques: ['signo'],
-        intro: ['La única operación geométrica de todo el algoritmo: el test de orientación Δ.', 'The only geometric operation in the whole algorithm: the orientation test Δ.'],
-        pasos: [
-          { t: ['Recibe tres puntos y devuelve un número: el doble del área con signo del triángulo p1 p2 p3.', 'It takes three points and returns a number: twice the signed area of triangle p1 p2 p3.'], ...R(/Input:/, /si = 0/) },
-          { t: ['Es el determinante de los vectores p1→p2 y p1→p3. Su signo dice hacia dónde se gira: &gt; 0 izquierda, &lt; 0 derecha, = 0 alineados. Puedes probarlo en el dibujo de Δ de más arriba.', 'It is the determinant of the vectors p1→p2 and p1→p3. Its sign tells the turn: &gt; 0 left, &lt; 0 right, = 0 collinear. Try it in the Δ drawing above.'], ...R(/return/) }] },
-      { id: 'min', etiqueta: 'MIN', bloques: ['MIN'],
-        intro: ['Lee el siguiente vértice del polígono, como en el pseudocódigo de clase.', 'Reads the next vertex of the polygon, as in the pseudocode from class.'],
-        pasos: [{ t: ['<code>pop(0)</code> devuelve el primer elemento de la lista y lo borra. Así P siempre contiene los vértices que quedan por leer.', '<code>pop(0)</code> returns the first element of the list and removes it. So P always holds the vertices still to be read.'], ...R(/return P\.pop/) }] },
-      { id: 'vecinos', etiqueta: 'ANTERIOR · POSTERIOR', bloques: ['ANTERIOR', 'POSTERIOR'],
-        intro: ['Los dos vecinos de un vértice en el cierre C.', 'The two neighbours of a vertex in the hull C.'],
-        pasos: [
-          { t: ['<code>C.index(s)</code> busca la posición de s en C; restando 1 se obtiene el anterior.', '<code>C.index(s)</code> finds the position of s in C; subtracting 1 gives the previous one.'], ...R(/C\.index\(s\) - 1/) },
-          { t: ['Sumando 1 se obtiene el posterior. El <code>% len(C)</code> hace que C sea circular: el posterior del último es el primero.', 'Adding 1 gives the next one. The <code>% len(C)</code> makes C circular: the next of the last one is the first.'], ...R(/C\.index\(s\) \+ 1/) }],
-        pie: ['<code>index</code> recorre la lista, así que no es tiempo constante: por eso nuestra versión no llega al O(n) estricto de la cola doble (ver Limitaciones).', '<code>index</code> walks the list, so it is not constant time: that is why our version does not reach the strict O(n) of the deque (see Limitations).'] },
-      { id: 'rq', etiqueta: 'en_Rq', bloques: ['en_Rq'],
-        intro: ['Traduce la definición de R_q a código.', 'Translates the definition of R_q into code.'],
-        pasos: [
-          { t: ['Recibe el vértice nuevo p, el último añadido q, el cierre C y la orientación O.', 'It takes the new vertex p, the last added q, the hull C and the orientation O.'], ...R(/Input:/, /O \(orientación/) },
-          { t: ['p está en R_q si está a la izquierda (según O) de q→POSTERIOR(q) <b>y</b> de ANTERIOR(q)→q. Con <code>≥ 0</code>, como en los apuntes, un punto sobre uno de esos lados también se descarta: no puede ser vértice del cierre.', 'p is in R_q if it is to the left (according to O) of q→POSTERIOR(q) <b>and</b> of ANTERIOR(q)→q. With <code>≥ 0</code>, as in the notes, a point lying on one of those sides is also discarded: it cannot be a hull vertex.'], ...R(/return O\*signo/) }] },
-      { id: 'melkman', etiqueta: 'melkman', bloques: ['melkman'], depurador: true },
-      { id: 'ejemplos', etiqueta: 'ejemplos', bloques: ['import', 'ciudad', 'caracol', 'ejemplos'],
-        intro: ['Los polígonos del menú de la applet.', 'The polygons in the applet menu.'],
-        pasos: [
-          { t: ['<code>ciudad</code> genera el perfil de una ciudad: el suelo y después los tejados de derecha a izquierda, bajando a la calle entre edificio y edificio.', '<code>ciudad</code> builds a city skyline: the ground and then the roofs from right to left, going down to the street between buildings.'], ...R(/^def ciudad/, /return P/) },
-          { t: ['<code>caracol</code> genera una banda en espiral: sale hacia fuera por una curva y vuelve por otra paralela. El radio crece con el ángulo.', '<code>caracol</code> builds a spiral band: it goes out along one curve and comes back along a parallel one. The radius grows with the angle.'], ...R(/^def caracol/, /return ida/) },
-          { t: ['<code>ejemplos</code> es el diccionario del menú. El orden de las claves es el orden en el que salen, de más fácil a más difícil.', '<code>ejemplos</code> is the menu dictionary. The order of its keys is the order in which they appear, from easiest to hardest.'], ...R(/^ejemplos =/, /^}/) }] }
-    ]
-  });
+  // ---- melkman.ipynb: un botón «Implementación en código» en cada apartado que explica esa parte ----
+  const MK = { archivo: 'melkman.ipynb', color: 'var(--cyan)', cargar: () => cargarCeldas('melkman.ipynb').then(bloquesPy) };
+  const tabMIN = { id: 'min', etiqueta: 'MIN', bloques: ['MIN'],
+    intro: ['Lee el siguiente vértice del polígono, como en el pseudocódigo de clase.', 'Reads the next vertex of the polygon, as in the pseudocode from class.'],
+    pasos: [{ t: ['<code>pop(0)</code> devuelve el primer elemento de la lista y lo borra. Así P siempre contiene los vértices que quedan por leer.', '<code>pop(0)</code> returns the first element of the list and removes it. So P always holds the vertices still to be read.'], ...R(/return P\.pop/) }] };
+  const tabVecinos = { id: 'vecinos', etiqueta: 'ANTERIOR · POSTERIOR', bloques: ['ANTERIOR', 'POSTERIOR'],
+    intro: ['Los dos vecinos de un vértice en el cierre C.', 'The two neighbours of a vertex in the hull C.'],
+    pasos: [
+      { t: ['<code>C.index(s)</code> busca la posición de s en C; restando 1 se obtiene el anterior.', '<code>C.index(s)</code> finds the position of s in C; subtracting 1 gives the previous one.'], ...R(/C\.index\(s\) - 1/) },
+      { t: ['Sumando 1 se obtiene el posterior. El <code>% len(C)</code> hace que C sea circular: el posterior del último es el primero.', 'Adding 1 gives the next one. The <code>% len(C)</code> makes C circular: the next of the last one is the first.'], ...R(/C\.index\(s\) \+ 1/) }],
+    pie: ['<code>index</code> recorre la lista, así que no es tiempo constante: por eso nuestra versión no llega al O(n) estricto de la cola doble (ver Limitaciones).', '<code>index</code> walks the list, so it is not constant time: that is why our version does not reach the strict O(n) of the deque (see Limitations).'] };
+
+  const impl = {};
+  impl.idea = botonCodigo('idea', Object.assign({}, MK, { tabs: [
+    { id: 'melkman', etiqueta: 'melkman', bloques: ['melkman'],
+      intro: ['La función principal. Sigue los mismos pasos que la idea de arriba. La lista <code>pasos</code> no es parte del algoritmo: guarda lo que pasa en cada paso para que la applet lo pueda dibujar.', 'The main function. It follows the same steps as the idea above. The list <code>pasos</code> is not part of the algorithm: it stores what happens at each step so the applet can draw it.'],
+      pasos: [
+        { t: ['<b>Inicio.</b> <code>MIN</code> saca los tres primeros vértices, que forman el triángulo inicial C. <code>O</code> es su orientación (el signo del triángulo). El <code>while</code> del medio solo actúa si están alineados (ver Limitaciones).', '<b>Start.</b> <code>MIN</code> takes the first three vertices, which form the initial triangle C. <code>O</code> is its orientation (the sign of the triangle). The <code>while</code> in the middle only acts if they are collinear (see Limitations).'], ...R(/# Inicio:/, /'caso': 'inicio'/) },
+        { t: ['Mientras queden vértices, se lee el siguiente, <b>p</b>. q es siempre el último vértice que entró en C (al principio, el tercero).', 'While there are vertices left, the next one, <b>p</b>, is read. q is always the last vertex that joined C (at first, the third one).'], ...R(/while P != \[\]:/, /p = MIN\(P\)/) },
+        { t: ['<b>Caso 1.</b> Mientras p esté en R_q (<code>en_Rq</code>), se descarta y se lee el siguiente.', '<b>Case 1.</b> While p is in R_q (<code>en_Rq</code>), it is discarded and the next one is read.'], ...R(/# Caso 1/, /^\s+p = MIN\(P\)/) },
+        { t: ['<b>Caso 2.</b> p está fuera de R_q: se buscan las dos tangentes, se inserta p y se borran los vértices que quedan dentro. Después p pasa a ser q. (El detalle de las tangentes está en el código de R_q, más abajo.)', '<b>Case 2.</b> p is outside R_q: the two tangents are found, p is inserted and the vertices left inside are deleted. Then p becomes q. (The tangents are explained in the R_q code, below.)'], ...R(/# Caso 2/, /'caso': 2/) },
+        { t: ['Si el último vértice de P también estaba en R_q, el bucle del caso 1 se para sin descartarlo, así que se descarta aquí.', 'If the last vertex of P was also in R_q, the case 1 loop stops without discarding it, so it is discarded here.'], ...R(/# El último vértice/, /pasos\.append/) },
+        { t: ['Cuando no quedan vértices, C es el cierre convexo.', 'When no vertices are left, C is the convex hull.'], ...R(/return C, pasos/) }] },
+    tabMIN, tabVecinos] }));
+
+  impl.signo = botonCodigo('signo', Object.assign({}, MK, { tabs: [
+    { id: 'signo', etiqueta: 'signo', bloques: ['signo'],
+      intro: ['La única operación geométrica de todo el algoritmo: el test de orientación Δ.', 'The only geometric operation in the whole algorithm: the orientation test Δ.'],
+      pasos: [
+        { t: ['Recibe tres puntos y devuelve un número: el doble del área con signo del triángulo p1 p2 p3.', 'It takes three points and returns a number: twice the signed area of triangle p1 p2 p3.'], ...R(/Input:/, /si = 0/) },
+        { t: ['Es el determinante de los vectores p1→p2 y p1→p3. Su signo dice hacia dónde se gira: &gt; 0 izquierda, &lt; 0 derecha, = 0 alineados. Puedes probarlo en el dibujo de Δ.', 'It is the determinant of the vectors p1→p2 and p1→p3. Its sign tells the turn: &gt; 0 left, &lt; 0 right, = 0 collinear. Try it in the Δ drawing.'], ...R(/return/) }] }] }));
+
+  impl.rq = botonCodigo('rq', Object.assign({}, MK, { tabs: [
+    { id: 'rq', etiqueta: 'en_Rq', bloques: ['en_Rq'],
+      intro: ['Traduce la definición de R_q a código.', 'Translates the definition of R_q into code.'],
+      pasos: [
+        { t: ['Recibe el vértice nuevo p, el último añadido q, el cierre C y la orientación O.', 'It takes the new vertex p, the last added q, the hull C and the orientation O.'], ...R(/Input:/, /O \(orientación/) },
+        { t: ['p está en R_q si está a la izquierda (según O) de q→POSTERIOR(q) <b>y</b> de ANTERIOR(q)→q. Con <code>≥ 0</code>, como en los apuntes, un punto sobre uno de esos lados también se descarta: no puede ser vértice del cierre.', 'p is in R_q if it is to the left (according to O) of q→POSTERIOR(q) <b>and</b> of ANTERIOR(q)→q. With <code>≥ 0</code>, as in the notes, a point lying on one of those sides is also discarded: it cannot be a hull vertex.'], ...R(/return O\*signo/) }] },
+    { id: 'tg', etiqueta: 'melkman · caso 2', bloques: ['melkman'],
+      intro: ['La parte de <code>melkman</code> que hace el caso 2: las dos tangentes del dibujo.', 'The part of <code>melkman</code> that handles case 2: the two tangents in the drawing.'],
+      pasos: [
+        { t: ['Si p no está en R_q, entra en el cierre. <code>borrados</code> guarda los vértices que se van a eliminar.', 'If p is not in R_q, it joins the hull. <code>borrados</code> stores the vertices that will be removed.'], ...R(/if not en_Rq/, /borrados = \[\]/) },
+        { t: ['<b>Tangente hacia atrás.</b> Desde q se va hacia atrás con ANTERIOR mientras O·Δ(t, s, p) ≤ 0. Cuando sale &gt; 0, s es el punto de tangencia y p se inserta justo después de s.', '<b>Backward tangent.</b> Starting at q it moves back with ANTERIOR while O·Δ(t, s, p) ≤ 0. When it becomes &gt; 0, s is the tangent point and p is inserted right after s.'], ...R(/# Tangente hacia atrás/, /C\.insert/) },
+        { t: ['<b>Tangente hacia delante.</b> Desde p se va hacia delante con POSTERIOR; mientras O·Δ(s, t, p) ≤ 0, s ha quedado dentro del nuevo cierre y se borra. Al final, p pasa a ser el nuevo q.', '<b>Forward tangent.</b> Starting at p it moves forward with POSTERIOR; while O·Δ(s, t, p) ≤ 0, s is now inside the new hull and gets deleted. Finally, p becomes the new q.'], ...R(/# Tangente hacia delante/, /^\s+q = p\s*$/) }] }] }));
+
+  impl.alineados = botonCodigo('alineados', Object.assign({}, MK, { tabs: [
+    { id: 'alin', etiqueta: 'melkman · inicio', bloques: ['melkman'],
+      intro: ['Cómo lo resuelve nuestra función <code>melkman</code>.', 'How our <code>melkman</code> function solves it.'],
+      pasos: [
+        { t: ['Mientras p1, p2 y q estén alineados (Δ = 0), p2 está entre los otros dos: se descarta, q pasa a ser p2 y se lee un vértice nuevo.', 'While p1, p2 and q are collinear (Δ = 0), p2 lies between the other two: it is discarded, q becomes p2 and a new vertex is read.'], ...R(/# Si p1, p2, q están alineados/, /^\s+q = MIN\(P\)/) },
+        { t: ['Si se acaban los vértices, es que todos están alineados: no es un polígono y se lanza un error (la applet lo muestra como aviso).', 'If the vertices run out, they are all collinear: it is not a polygon and an error is raised (the applet shows it as a warning).'], ...R(/if P == \[\]:/, /raise ValueError/) },
+        { t: ['Con un triángulo de verdad, O ya no es 0.', 'With a real triangle, O is no longer 0.'], ...R(/C\.extend/, /O = signo/) }] }] }));
+
+  impl.ejemplos = botonCodigo('ejemplos', Object.assign({}, MK, { tabs: [
+    { id: 'ejemplos', etiqueta: 'ejemplos', bloques: ['import', 'ciudad', 'caracol', 'ejemplos'],
+      intro: ['Los polígonos del menú de la applet.', 'The polygons in the applet menu.'],
+      pasos: [
+        { t: ['<code>ciudad</code> genera el perfil de una ciudad: el suelo y después los tejados de derecha a izquierda, bajando a la calle entre edificio y edificio.', '<code>ciudad</code> builds a city skyline: the ground and then the roofs from right to left, going down to the street between buildings.'], ...R(/^def ciudad/, /return P/) },
+        { t: ['<code>caracol</code> genera una banda en espiral: sale hacia fuera por una curva y vuelve por otra paralela. El radio crece con el ángulo.', '<code>caracol</code> builds a spiral band: it goes out along one curve and comes back along a parallel one. The radius grows with the angle.'], ...R(/^def caracol/, /return ida/) },
+        { t: ['<code>ejemplos</code> es el diccionario del menú. El orden de las claves es el orden en el que salen, de más fácil a más difícil.', '<code>ejemplos</code> is the menu dictionary. The order of its keys is the order in which they appear, from easiest to hardest.'], ...R(/^ejemplos =/, /^}/) }] }] }));
 
   // ---- applet.ipynb, con el recorrido de los datos ----
   const P_JSON = [[0, 0], [4, 0], [2, 1], [4, 4], [0, 4], [1, 3], [3, 3]];
@@ -1899,7 +1803,7 @@ function visoresCodigo() {
   };
   const nodos = [
     { id: 'applet', nm: 'applet()', fl: 'applet.ipynb', col: 'var(--green)' },
-    { id: 'simple', nm: 'es_simple()', fl: 'applet.ipynb', col: 'var(--green)' },
+    { id: 'simple', nm: 'testPoligonoSimple()', fl: 'applet.ipynb · Prácticas 1 y 4', col: 'var(--green)' },
     { id: 'mk', nm: 'melkman()', fl: 'melkman.ipynb ↑', col: 'var(--cyan)' },
     { id: 'datos', nm: 'datos_reproductor()', fl: 'applet.ipynb', col: 'var(--green)', sub: [['previo', 'estado_previo'], ['region', 'region_Rq']] },
     { id: 'enviar', nm: 'enviar_a_la_web()', fl: 'applet.ipynb', col: 'var(--green)' },
@@ -1913,7 +1817,7 @@ function visoresCodigo() {
   const marcarNodo = id => pipe.querySelectorAll('[data-n]').forEach(x => x.classList.toggle('on', x.dataset.n === id));
   pipe.querySelectorAll('.pnode').forEach(b => b.addEventListener('click', e => {
     const sub = e.target.closest('.sub span'), id = sub ? sub.dataset.n : b.dataset.n;
-    if (id === 'mk') { $('codigo-melkman').scrollIntoView({ behavior: 'smooth', block: 'start' }); if (visMk.bloques) visMk.elegir('melkman'); return; }
+    if (id === 'mk') { if (impl.idea) impl.idea.abrir('melkman', true); return; }
     if (visAp.bloques) visAp.elegir(id);
   }));
   visAp = new VisorCodigo($('vis-applet'), {
@@ -1924,15 +1828,17 @@ function visoresCodigo() {
         pasos: [
           { t: ['<code>@interact</code> convierte los parámetros en controles: <code>selector</code> es el menú de polígonos e <code>input_box</code> la caja de coordenadas. Cada vez que cambian, Sage vuelve a ejecutar la función.', '<code>@interact</code> turns the parameters into controls: <code>selector</code> is the polygon menu and <code>input_box</code> the coordinates box. Every time they change, Sage runs the function again.'], ...R(/^@interact/, /width=60/) },
           { t: ['Se coge el polígono del menú (o el escrito a mano) y se pasan las coordenadas a decimales, para que Sage no haga cálculos simbólicos lentos.', 'It takes the polygon from the menu (or the one typed in) and turns the coordinates into decimals, so Sage does not do slow symbolic computations.'], ...R(/# 1\./) },
-          { t: ['Comprobaciones: al menos 3 vértices, ninguno repetido y que sea simple (con <code>es_simple</code>).', 'Checks: at least 3 vertices, none repeated, and simple (with <code>es_simple</code>).'], ...R(/# 2\./, /error = 'no_simple'/) },
+          { t: ['Comprobaciones: al menos 3 vértices, ninguno repetido y que sea simple (con <code>testPoligonoSimple</code>, de la Práctica 4).', 'Checks: at least 3 vertices, none repeated, and simple (with <code>testPoligonoSimple</code>, from Practice 4).'], ...R(/# 2\./, /error = 'no_simple'/) },
           { t: ['Se llama a <code>melkman(P)</code>. Si todos los vértices están alineados, <code>melkman</code> lanza un <code>ValueError</code> y aquí se convierte en otro aviso.', '<code>melkman(P)</code> is called. If all the vertices are collinear, <code>melkman</code> raises a <code>ValueError</code>, which becomes another warning here.'], ...R(/if error is None/, /error = 'alineados'/) },
           { t: ['Si algo ha fallado, se manda a la web solo el tipo de error y el reproductor muestra el aviso.', 'If something failed, only the type of error is sent to the website and the player shows the warning.'], ...R(/if error is not None/, /^\s*return\s*$/) },
           { t: ['Si todo va bien, se imprime un resumen y se mandan todos los pasos al reproductor.', 'If everything went well, a summary is printed and all the steps are sent to the player.'], ...R(/# 4\./) }] },
-      { id: 'simple', etiqueta: 'es_simple', bloques: ['es_simple'],
-        intro: ['Comprueba que el polígono no se cruza, porque Melkman solo funciona con polígonos simples.', 'Checks that the polygon does not cross itself, because Melkman only works on simple polygons.'],
+      { id: 'simple', etiqueta: 'testPoligonoSimple', bloques: ['areaSignada', 'enSegmentoII', 'testInterseccionSegmentos', 'testPoligonoSimple'],
+        intro: ['Comprueba que el polígono no se cruza, porque Melkman solo funciona con polígonos simples. Son las funciones de clase de las Prácticas 1 y 4.', 'Checks that the polygon does not cross itself, because Melkman only works on simple polygons. These are the class functions from Practices 1 and 4.'],
         pasos: [
-          { t: ['Test de corte de segmentos de clase: ab y cd se cortan si c y d quedan a distinto lado de ab, y a y b a distinto lado de cd (Δ de signos opuestos). Si algún Δ es 0, se mira si ese punto cae dentro del otro segmento.', 'Segment intersection test from class: ab and cd cross if c and d lie on different sides of ab, and a and b on different sides of cd (Δ with opposite signs). If some Δ is 0, it checks whether that point lies on the other segment.'], ...R(/def se_cortan/, /\(d3 == 0/) },
-          { t: ['Se comparan todas las parejas de lados que no son vecinos (los vecinos comparten un vértice y siempre se tocan). Es O(n²), pero solo se hace una vez.', 'Every pair of non-adjacent sides is compared (adjacent sides share a vertex and always touch). It is O(n²), but it only runs once.'], ...R(/for i in range\(n\)/, /return True/) }] },
+          { t: ['<code>areaSignada</code> (Práctica 1): la mitad de <code>signo</code>, así que tiene el mismo signo.', '<code>areaSignada</code> (Practice 1): half of <code>signo</code>, so it has the same sign.'], ...R(/^def areaSignada/, /^\s+return\(/) },
+          { t: ['<code>enSegmentoII</code> (Práctica 1): p está en el segmento si está alineado con sus extremos y su x y su y quedan entre las de los extremos.', '<code>enSegmentoII</code> (Practice 1): p is on the segment if it is collinear with its endpoints and its x and y lie between theirs.'], ...R(/^def enSegmentoII/, /^ {4}return False/) },
+          { t: ['<code>testInterseccionSegmentos</code> (Práctica 1): se cortan si cada segmento deja los extremos del otro a distinto lado (áreas de signo opuesto); si no, se mira si algún extremo cae sobre el otro segmento.', '<code>testInterseccionSegmentos</code> (Practice 1): they cross if each segment leaves the endpoints of the other on different sides (areas of opposite sign); otherwise it checks whether an endpoint lies on the other segment.'], ...R(/^def testInterseccionSegmentos/, /^ {4}return False/) },
+          { t: ['<code>testPoligonoSimple</code> (Práctica 4): compara cada lado con todos los que no son vecinos suyos (los vecinos comparten un vértice y siempre se tocan). Es O(n²), pero solo se hace una vez.', '<code>testPoligonoSimple</code> (Practice 4): compares each side with every side that is not its neighbour (neighbours share a vertex and always touch). It is O(n²), but it only runs once.'], ...R(/^def testPoligonoSimple/, /^\s+return True/) }] },
       { id: 'previo', etiqueta: 'estado_previo', bloques: ['estado_previo'],
         intro: ['Para dibujar el paso k hace falta saber cómo estaba todo justo antes.', 'To draw step k we need to know what everything looked like just before.'],
         pasos: [
