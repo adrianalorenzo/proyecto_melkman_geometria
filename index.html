@@ -437,23 +437,15 @@ button.mk-wait.fallo .sm.listo { display: none; }
 .pnode .sub { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .pnode .sub span { font-family: "JetBrains Mono", monospace; font-size: .68rem; border: 1px dashed var(--line2); border-radius: 6px; padding: 0 5px; color: var(--text2); }
 .pnode .sub span.on { border-style: solid; border-color: var(--green); color: var(--green); }
+.cx { margin-top: 18px; border: 1px solid var(--line); border-left: 3px solid var(--yellow); border-radius: 12px; background: var(--s1); padding: 16px 18px; }
+.cx h4 { margin: 0 0 10px; font-size: 1.02rem; color: var(--yellow); }
+.cx-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--line2); font-size: .93rem; }
+.cx-row.sub { padding-left: 22px; color: var(--text2); }
+.cx-row .o { font-family: "JetBrains Mono", monospace; font-weight: 700; color: var(--yellow); border: 1px solid var(--yellow); border-radius: 8px; padding: 2px 10px; white-space: nowrap; }
+.cx-row.tot { border-bottom: 0; font-weight: 600; }
+.cx-row.tot .o { background: var(--green); border-color: var(--green); color: #000; }
+.cx .formula div { margin: 3px 0; }
 .leg-line { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
-
-/* botón «Implementación en código» */
-.impl { margin-top: 18px; }
-.impl-btn { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 16px; border-radius: 12px;
-  border: 1px dashed var(--line2); background: var(--s1); color: var(--text2); transition: .18s; flex-wrap: wrap; }
-.impl-btn:hover { border-color: var(--cyan); color: var(--text); box-shadow: 0 0 16px rgba(var(--cyan-rgb, 0,229,255), .18); }
-.impl-btn .ic { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: .85rem; color: #000; background: var(--cyan); border-radius: 7px; padding: 3px 8px; box-shadow: 0 0 12px rgba(var(--cyan-rgb, 0,229,255), .45); }
-.impl-btn .tx { font-weight: 600; }
-.impl-btn .fl { font-family: "JetBrains Mono", monospace; font-size: .72rem; color: var(--muted); flex: 1; min-width: 0; }
-.impl-btn .chev { transition: transform .25s; color: var(--cyan); }
-.impl.open .impl-btn { border-style: solid; border-color: var(--cyan); border-radius: 12px 12px 0 0; }
-.impl.open .impl-btn .chev { transform: rotate(180deg); }
-.impl-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
-.impl.open .impl-panel { grid-template-rows: 1fr; }
-.impl-in { overflow: hidden; min-height: 0; }
-.impl.open .impl-in .code-card { border-top: 0; border-radius: 0 0 16px 16px; border-color: var(--cyan); }
 
   </style>
 </head>
@@ -580,7 +572,6 @@ button.mk-wait.fallo .sm.listo { display: none; }
     </div>
     <p class="es" style="margin-top:14px">En el artículo original<sup class="ref">[<a href="#ref1">1</a>]</sup> y en <sup class="ref">[<a href="#ref3">3</a>]</sup>, C se guarda en una <strong>cola doble</strong> (deque) con q en sus dos extremos: así los dos vecinos de q están siempre en las puntas de la cola y añadir o quitar vértices cuesta tiempo constante.</p>
     <p class="en" style="margin-top:14px">In the original paper<sup class="ref">[<a href="#ref1">1</a>]</sup> and in <sup class="ref">[<a href="#ref3">3</a>]</sup>, C is stored in a <strong>double-ended queue</strong> (deque) with q at both ends: the two neighbours of q are always at the tips of the queue, so adding or removing vertices takes constant time.</p>
-    <div data-impl="idea"></div>
   </div>
 
   <!-- 1.4 -->
@@ -603,7 +594,6 @@ button.mk-wait.fallo .sm.listo { display: none; }
         <div class="w-bar"><span id="w-delta-info"></span></div>
       </div>
     </div>
-    <div data-impl="signo"></div>
   </div>
 
   <!-- 1.5 -->
@@ -629,9 +619,15 @@ button.mk-wait.fallo .sm.listo { display: none; }
         <div class="w-bar"><span id="w-rq-info"></span></div>
       </div>
     </div>
-    <div data-impl="rq"></div>
   </div>
 
+  <!-- 1.6 código -->
+  <div class="block g reveal" id="codigo-melkman">
+    <h3><span class="es">Implementación en SageMath: melkman.ipynb</span><span class="en">Implementation in SageMath: melkman.ipynb</span></h3>
+    <p class="es">Este es el código de <code>melkman.ipynb</code>, el mismo que ejecuta la applet: la web lo lee directamente del notebook. Elige una función para ver qué hace cada parte.</p>
+    <p class="en">This is the code in <code>melkman.ipynb</code>, the same code the applet runs: the website reads it straight from the notebook. Pick a function to see what each part does.</p>
+    <div id="vis-melkman"></div>
+  </div>
 </section>
 
 <!-- ===================== 02 INSTRUCCIONES ===================== -->
@@ -655,7 +651,6 @@ button.mk-wait.fallo .sm.listo { display: none; }
           <li><i><span class="es">Ciudad</span><span class="en">Ciudad (city skyline)</span></i>: <span class="es">muchos bolsillos pequeños entre edificios.</span><span class="en">many small pockets between buildings.</span></li>
           <li><i><span class="es">Caracol</span><span class="en">Caracol (spiral)</span></i>: <span class="es">una espiral, con muchos vértices dentro del cierre.</span><span class="en">a spiral, with many vertices inside the hull.</span></li>
         </ul>
-        <div data-impl="ejemplos"></div>
       </div></div>
       <div class="it"><div class="num">3</div><div>
         <p class="es"><b>O introduce tu propio polígono:</b> elige <i>Personalizado</i> y escribe los vértices en la caja <i>Coordenadas</i> como una lista de pares, por ejemplo:</p>
@@ -782,6 +777,32 @@ button.mk-wait.fallo .sm.listo { display: none; }
         <li><strong class="c-green">Melkman</strong><sup class="ref">[<a href="#ref1">1</a>, <a href="#ref2">2</a>]</sup> is a modification of the <strong>incremental algorithm</strong>. In the incremental algorithm for point clouds, each new point can land anywhere, so we must test whether it is inside the hull and find its tangents by walking around the whole hull. In a simple polygon, the next vertex can only leave the hull "near" the last one added, q: it is enough to look at the region R_q (two evaluations of Δ) and start looking for the tangents from q. Besides, as in Graham, it removes vertices while there is no left turn, but <strong>on both sides</strong> of C. That is why it can start at <strong>any vertex</strong> and has only <strong>2 cases</strong><sup class="ref">[<a href="#ref10">10</a>]</sup>. And it is <strong>O(n)</strong>: checking R_q takes two evaluations of Δ, and although finding the tangents may walk over several vertices, each vertex enters C once and leaves at most once<sup class="ref">[<a href="#ref1">1</a>, <a href="#ref3">3</a>]</sup>.</li>
       </ul>
     </div>
+    <div class="cx es">
+      <h4>Complejidad de Melkman paso a paso</h4>
+      <div class="cx-row"><span><b>Comenzar con tres puntos</b> (un triángulo siempre es convexo)</span><span class="o">O(cte)</span></div>
+      <div class="cx-row"><span><b>Para i = 0 hasta n − 3</b>, con cada vértice nuevo:</span><span></span></div>
+      <div class="cx-row sub"><span>Calcular si está contenido en R_q (dos Δ)</span><span class="o">O(cte)</span></div>
+      <div class="cx-row sub"><span>Calcular las tangentes (n<sub>i</sub> = vértices que recorren y borran)</span><span class="o">O(n<sub>i</sub>)</span></div>
+      <div class="formula">
+        <div>T(i) = T(i − 1) + O(n<sub>i</sub>)</div>
+        <div>T(n) = O(n<sub>1</sub> + n<sub>2</sub> + … + n<sub>n</sub>) = O(n)</div>
+      </div>
+      <p style="margin:0">¿Por qué la suma de los n<sub>i</sub> es O(n) si un solo paso puede recorrer muchos vértices? Porque cada vértice que la búsqueda de tangentes deja atrás <b>se borra de C</b>, y cada vértice entra en C una vez y sale como mucho una vez. En total se borran como mucho n vértices, así que, sumando todos los pasos, n<sub>1</sub> + … + n<sub>n</sub> ≤ 2n<sup class="ref">[<a href="#ref1">1</a>, <a href="#ref2">2</a>]</sup>.</p>
+      <div class="cx-row tot"><span>Total</span><span class="o">O(n)</span></div>
+    </div>
+    <div class="cx en">
+      <h4>Melkman's complexity step by step</h4>
+      <div class="cx-row"><span><b>Start with three points</b> (a triangle is always convex)</span><span class="o">O(const)</span></div>
+      <div class="cx-row"><span><b>For i = 0 to n − 3</b>, with each new vertex:</span><span></span></div>
+      <div class="cx-row sub"><span>Check whether it lies in R_q (two Δ)</span><span class="o">O(const)</span></div>
+      <div class="cx-row sub"><span>Find the tangents (n<sub>i</sub> = vertices walked over and deleted)</span><span class="o">O(n<sub>i</sub>)</span></div>
+      <div class="formula">
+        <div>T(i) = T(i − 1) + O(n<sub>i</sub>)</div>
+        <div>T(n) = O(n<sub>1</sub> + n<sub>2</sub> + … + n<sub>n</sub>) = O(n)</div>
+      </div>
+      <p style="margin:0">Why is the sum of the n<sub>i</sub> O(n) if a single step can walk over many vertices? Because every vertex the tangent search leaves behind <b>is deleted from C</b>, and each vertex enters C once and leaves at most once. At most n vertices are deleted overall, so, adding up all the steps, n<sub>1</sub> + … + n<sub>n</sub> ≤ 2n<sup class="ref">[<a href="#ref1">1</a>, <a href="#ref2">2</a>]</sup>.</p>
+      <div class="cx-row tot"><span>Total</span><span class="o">O(n)</span></div>
+    </div>
   </div>
 
   <!-- 4.2 carrera -->
@@ -880,7 +901,6 @@ button.mk-wait.fallo .sm.listo { display: none; }
       <div class="lim"><div class="n">2</div><div>
         <p class="es"><strong>Los tres primeros vértices alineados.</strong> Si p1, p2 y q están alineados, O = 0 y todas las comprobaciones dan 0: con el pseudocódigo de clase<sup class="ref">[<a href="#ref2">2</a>]</sup>, el algoritmo se queda en un bucle infinito. En nuestra implementación lo resolvemos descartando el vértice del medio (que está entre los otros dos y no puede ser vértice del cierre) y cogiendo el siguiente, hasta formar un triángulo de verdad.</p>
         <p class="en"><strong>The first three vertices are collinear.</strong> If p1, p2 and q are collinear, O = 0 and every test returns 0: with the pseudocode from class<sup class="ref">[<a href="#ref2">2</a>]</sup>, the algorithm gets stuck in an infinite loop. In our implementation we solve it by discarding the middle vertex (it lies between the other two, so it cannot be a hull vertex) and taking the next one, until we get a real triangle.</p>
-        <div data-impl="alineados"></div>
       </div></div>
       <div class="lim"><div class="n">3</div><div>
         <p class="es"><strong>Precisión numérica.</strong> Con coordenadas decimales, un Δ que debería ser 0 puede salir ligeramente positivo o negativo por el redondeo, y un punto alineado se puede clasificar mal. Con coordenadas enteras o racionales el cálculo es exacto.</p>
@@ -1644,7 +1664,7 @@ function rango(lineas, desde, hasta) {   // líneas [i, j] que hay que resaltar:
 
 class VisorCodigo {
   constructor(raiz, o) {
-    this.raiz = raiz; this.o = o; this.tab = o.tab0 || o.tabs[0].id; this.hl = null; this.paso = 0;
+    this.raiz = raiz; this.o = o; this.tab = o.tabs[0].id; this.hl = null; this.paso = 0;
     raiz.innerHTML = `<div class="mk-wait" style="padding:30px">${T('Cargando el código…', 'Loading the code…')}</div>`;
     o.cargar().then(bloques => { this.bloques = bloques; this.montar(); onLang.push(() => this.pintarLado()); })
       .catch(() => { raiz.innerHTML = `<div class="note warn"><p>${T('No se pudo leer el notebook (abre la web desde GitHub Pages o con un servidor local).', 'The notebook could not be read (open the site from GitHub Pages or with a local server).')}</p></div>`; });
@@ -1701,97 +1721,50 @@ class VisorCodigo {
 }
 
 /* =====================================================================
-   BOTÓN «IMPLEMENTACIÓN EN CÓDIGO»: abre el código de la parte que se acaba de explicar
-   ===================================================================== */
-function botonCodigo(id, o) {
-  const raiz = document.querySelector(`[data-impl="${id}"]`); if (!raiz) return null;
-  raiz.classList.add('impl');
-  raiz.innerHTML = `
-    <button type="button" class="impl-btn" aria-expanded="false">
-      <span class="ic">&lt;/&gt;</span>
-      <span class="tx"><span class="es">Implementación en código</span><span class="en">Code implementation</span></span>
-      <span class="fl">${o.archivo} · ${o.tabs.map(t => t.etiqueta).join(' · ')}</span>
-      <span class="chev">▾</span>
-    </button>
-    <div class="impl-panel"><div class="impl-in"></div></div>`;
-  const btn = raiz.querySelector('.impl-btn'), dentro = raiz.querySelector('.impl-in');
-  let visor = null, abierto = false;
-  const poner = (v, tab) => {
-    abierto = v; raiz.classList.toggle('open', v); btn.setAttribute('aria-expanded', v);
-    if (v && !visor) { if (tab) o.tab0 = tab; visor = new VisorCodigo(dentro, o); }
-    else if (v && tab && visor.bloques) visor.elegir(tab);
-    // cuando termina de abrirse, se vuelve a colocar el código en la zona resaltada
-    if (v) setTimeout(() => { if (visor && visor.bloques && abierto) visor.pintarLado(); }, 420);
-  };
-  btn.addEventListener('click', () => poner(!abierto));
-  return { abrir(tab, ir) { poner(true, tab); if (ir) raiz.scrollIntoView({ behavior: 'smooth', block: 'start' }); } };
-}
-
-/* =====================================================================
    LOS DOS VISORES: melkman.ipynb y applet.ipynb
    ===================================================================== */
 function visoresCodigo() {
   const R = (desde, hasta) => ({ desde, hasta });
-  // ---- melkman.ipynb: un botón «Implementación en código» en cada apartado que explica esa parte ----
-  const MK = { archivo: 'melkman.ipynb', color: 'var(--cyan)', cargar: () => cargarCeldas('melkman.ipynb').then(bloquesPy) };
-  const tabMIN = { id: 'min', etiqueta: 'MIN', bloques: ['MIN'],
-    intro: ['Lee el siguiente vértice del polígono, como en el pseudocódigo de clase.', 'Reads the next vertex of the polygon, as in the pseudocode from class.'],
-    pasos: [{ t: ['<code>pop(0)</code> devuelve el primer elemento de la lista y lo borra. Así P siempre contiene los vértices que quedan por leer.', '<code>pop(0)</code> returns the first element of the list and removes it. So P always holds the vertices still to be read.'], ...R(/return P\.pop/) }] };
-  const tabVecinos = { id: 'vecinos', etiqueta: 'ANTERIOR · POSTERIOR', bloques: ['ANTERIOR', 'POSTERIOR'],
-    intro: ['Los dos vecinos de un vértice en el cierre C.', 'The two neighbours of a vertex in the hull C.'],
-    pasos: [
-      { t: ['<code>C.index(s)</code> busca la posición de s en C; restando 1 se obtiene el anterior.', '<code>C.index(s)</code> finds the position of s in C; subtracting 1 gives the previous one.'], ...R(/C\.index\(s\) - 1/) },
-      { t: ['Sumando 1 se obtiene el posterior. El <code>% len(C)</code> hace que C sea circular: el posterior del último es el primero.', 'Adding 1 gives the next one. The <code>% len(C)</code> makes C circular: the next of the last one is the first.'], ...R(/C\.index\(s\) \+ 1/) }],
-    pie: ['<code>index</code> recorre la lista, así que no es tiempo constante: por eso nuestra versión no llega al O(n) estricto de la cola doble (ver Limitaciones).', '<code>index</code> walks the list, so it is not constant time: that is why our version does not reach the strict O(n) of the deque (see Limitations).'] };
-
-  const impl = {};
-  impl.idea = botonCodigo('idea', Object.assign({}, MK, { tabs: [
-    { id: 'melkman', etiqueta: 'melkman', bloques: ['melkman'],
-      intro: ['La función principal. Sigue los mismos pasos que la idea de arriba. La lista <code>pasos</code> no es parte del algoritmo: guarda lo que pasa en cada paso para que la applet lo pueda dibujar.', 'The main function. It follows the same steps as the idea above. The list <code>pasos</code> is not part of the algorithm: it stores what happens at each step so the applet can draw it.'],
-      pasos: [
-        { t: ['<b>Inicio.</b> <code>MIN</code> saca los tres primeros vértices, que forman el triángulo inicial C. <code>O</code> es su orientación (el signo del triángulo). El <code>while</code> del medio solo actúa si están alineados (ver Limitaciones).', '<b>Start.</b> <code>MIN</code> takes the first three vertices, which form the initial triangle C. <code>O</code> is its orientation (the sign of the triangle). The <code>while</code> in the middle only acts if they are collinear (see Limitations).'], ...R(/# Inicio:/, /'caso': 'inicio'/) },
-        { t: ['Mientras queden vértices, se lee el siguiente, <b>p</b>. q es siempre el último vértice que entró en C (al principio, el tercero).', 'While there are vertices left, the next one, <b>p</b>, is read. q is always the last vertex that joined C (at first, the third one).'], ...R(/while P != \[\]:/, /p = MIN\(P\)/) },
-        { t: ['<b>Caso 1.</b> Mientras p esté en R_q (<code>en_Rq</code>), se descarta y se lee el siguiente.', '<b>Case 1.</b> While p is in R_q (<code>en_Rq</code>), it is discarded and the next one is read.'], ...R(/# Caso 1/, /^\s+p = MIN\(P\)/) },
-        { t: ['<b>Caso 2.</b> p está fuera de R_q: se buscan las dos tangentes, se inserta p y se borran los vértices que quedan dentro. Después p pasa a ser q. (El detalle de las tangentes está en el código de R_q, más abajo.)', '<b>Case 2.</b> p is outside R_q: the two tangents are found, p is inserted and the vertices left inside are deleted. Then p becomes q. (The tangents are explained in the R_q code, below.)'], ...R(/# Caso 2/, /'caso': 2/) },
-        { t: ['Si el último vértice de P también estaba en R_q, el bucle del caso 1 se para sin descartarlo, así que se descarta aquí.', 'If the last vertex of P was also in R_q, the case 1 loop stops without discarding it, so it is discarded here.'], ...R(/# El último vértice/, /pasos\.append/) },
-        { t: ['Cuando no quedan vértices, C es el cierre convexo.', 'When no vertices are left, C is the convex hull.'], ...R(/return C, pasos/) }] },
-    tabMIN, tabVecinos] }));
-
-  impl.signo = botonCodigo('signo', Object.assign({}, MK, { tabs: [
-    { id: 'signo', etiqueta: 'signo', bloques: ['signo'],
-      intro: ['La única operación geométrica de todo el algoritmo: el test de orientación Δ.', 'The only geometric operation in the whole algorithm: the orientation test Δ.'],
-      pasos: [
-        { t: ['Recibe tres puntos y devuelve un número: el doble del área con signo del triángulo p1 p2 p3.', 'It takes three points and returns a number: twice the signed area of triangle p1 p2 p3.'], ...R(/Input:/, /si = 0/) },
-        { t: ['Es el determinante de los vectores p1→p2 y p1→p3. Su signo dice hacia dónde se gira: &gt; 0 izquierda, &lt; 0 derecha, = 0 alineados. Puedes probarlo en el dibujo de Δ.', 'It is the determinant of the vectors p1→p2 and p1→p3. Its sign tells the turn: &gt; 0 left, &lt; 0 right, = 0 collinear. Try it in the Δ drawing.'], ...R(/return/) }] }] }));
-
-  impl.rq = botonCodigo('rq', Object.assign({}, MK, { tabs: [
-    { id: 'rq', etiqueta: 'en_Rq', bloques: ['en_Rq'],
-      intro: ['Traduce la definición de R_q a código.', 'Translates the definition of R_q into code.'],
-      pasos: [
-        { t: ['Recibe el vértice nuevo p, el último añadido q, el cierre C y la orientación O.', 'It takes the new vertex p, the last added q, the hull C and the orientation O.'], ...R(/Input:/, /O \(orientación/) },
-        { t: ['p está en R_q si está a la izquierda (según O) de q→POSTERIOR(q) <b>y</b> de ANTERIOR(q)→q. Con <code>≥ 0</code>, como en los apuntes, un punto sobre uno de esos lados también se descarta: no puede ser vértice del cierre.', 'p is in R_q if it is to the left (according to O) of q→POSTERIOR(q) <b>and</b> of ANTERIOR(q)→q. With <code>≥ 0</code>, as in the notes, a point lying on one of those sides is also discarded: it cannot be a hull vertex.'], ...R(/return O\*signo/) }] },
-    { id: 'tg', etiqueta: 'melkman · caso 2', bloques: ['melkman'],
-      intro: ['La parte de <code>melkman</code> que hace el caso 2: las dos tangentes del dibujo.', 'The part of <code>melkman</code> that handles case 2: the two tangents in the drawing.'],
-      pasos: [
-        { t: ['Si p no está en R_q, entra en el cierre. <code>borrados</code> guarda los vértices que se van a eliminar.', 'If p is not in R_q, it joins the hull. <code>borrados</code> stores the vertices that will be removed.'], ...R(/if not en_Rq/, /borrados = \[\]/) },
-        { t: ['<b>Tangente hacia atrás.</b> Desde q se va hacia atrás con ANTERIOR mientras O·Δ(t, s, p) ≤ 0. Cuando sale &gt; 0, s es el punto de tangencia y p se inserta justo después de s.', '<b>Backward tangent.</b> Starting at q it moves back with ANTERIOR while O·Δ(t, s, p) ≤ 0. When it becomes &gt; 0, s is the tangent point and p is inserted right after s.'], ...R(/# Tangente hacia atrás/, /C\.insert/) },
-        { t: ['<b>Tangente hacia delante.</b> Desde p se va hacia delante con POSTERIOR; mientras O·Δ(s, t, p) ≤ 0, s ha quedado dentro del nuevo cierre y se borra. Al final, p pasa a ser el nuevo q.', '<b>Forward tangent.</b> Starting at p it moves forward with POSTERIOR; while O·Δ(s, t, p) ≤ 0, s is now inside the new hull and gets deleted. Finally, p becomes the new q.'], ...R(/# Tangente hacia delante/, /^\s+q = p\s*$/) }] }] }));
-
-  impl.alineados = botonCodigo('alineados', Object.assign({}, MK, { tabs: [
-    { id: 'alin', etiqueta: 'melkman · inicio', bloques: ['melkman'],
-      intro: ['Cómo lo resuelve nuestra función <code>melkman</code>.', 'How our <code>melkman</code> function solves it.'],
-      pasos: [
-        { t: ['Mientras p1, p2 y q estén alineados (Δ = 0), p2 está entre los otros dos: se descarta, q pasa a ser p2 y se lee un vértice nuevo.', 'While p1, p2 and q are collinear (Δ = 0), p2 lies between the other two: it is discarded, q becomes p2 and a new vertex is read.'], ...R(/# Si p1, p2, q están alineados/, /^\s+q = MIN\(P\)/) },
-        { t: ['Si se acaban los vértices, es que todos están alineados: no es un polígono y se lanza un error (la applet lo muestra como aviso).', 'If the vertices run out, they are all collinear: it is not a polygon and an error is raised (the applet shows it as a warning).'], ...R(/if P == \[\]:/, /raise ValueError/) },
-        { t: ['Con un triángulo de verdad, O ya no es 0.', 'With a real triangle, O is no longer 0.'], ...R(/C\.extend/, /O = signo/) }] }] }));
-
-  impl.ejemplos = botonCodigo('ejemplos', Object.assign({}, MK, { tabs: [
-    { id: 'ejemplos', etiqueta: 'ejemplos', bloques: ['import', 'ciudad', 'caracol', 'ejemplos'],
-      intro: ['Los polígonos del menú de la applet.', 'The polygons in the applet menu.'],
-      pasos: [
-        { t: ['<code>ciudad</code> genera el perfil de una ciudad: el suelo y después los tejados de derecha a izquierda, bajando a la calle entre edificio y edificio.', '<code>ciudad</code> builds a city skyline: the ground and then the roofs from right to left, going down to the street between buildings.'], ...R(/^def ciudad/, /return P/) },
-        { t: ['<code>caracol</code> genera una banda en espiral: sale hacia fuera por una curva y vuelve por otra paralela. El radio crece con el ángulo.', '<code>caracol</code> builds a spiral band: it goes out along one curve and comes back along a parallel one. The radius grows with the angle.'], ...R(/^def caracol/, /return ida/) },
-        { t: ['<code>ejemplos</code> es el diccionario del menú. El orden de las claves es el orden en el que salen, de más fácil a más difícil.', '<code>ejemplos</code> is the menu dictionary. The order of its keys is the order in which they appear, from easiest to hardest.'], ...R(/^ejemplos =/, /^}/) }] }] }));
+  const visMk = new VisorCodigo($('vis-melkman'), {
+    archivo: 'melkman.ipynb', color: 'var(--cyan)', cargar: () => cargarCeldas('melkman.ipynb').then(bloquesPy),
+    tabs: [
+      { id: 'signo', etiqueta: 'signo', bloques: ['signo'],
+        intro: ['La única operación geométrica de todo el algoritmo: el test de orientación Δ.', 'The only geometric operation in the whole algorithm: the orientation test Δ.'],
+        pasos: [
+          { t: ['Recibe tres puntos y devuelve un número: el doble del área con signo del triángulo p1 p2 p3.', 'It takes three points and returns a number: twice the signed area of triangle p1 p2 p3.'], ...R(/Input:/, /si = 0/) },
+          { t: ['Es el determinante de los vectores p1→p2 y p1→p3. Su signo dice hacia dónde se gira: &gt; 0 izquierda, &lt; 0 derecha, = 0 alineados. Puedes probarlo en el dibujo de Δ de más arriba.', 'It is the determinant of the vectors p1→p2 and p1→p3. Its sign tells the turn: &gt; 0 left, &lt; 0 right, = 0 collinear. Try it in the Δ drawing above.'], ...R(/return/) }] },
+      { id: 'min', etiqueta: 'MIN', bloques: ['MIN'],
+        intro: ['Lee el siguiente vértice del polígono, como en el pseudocódigo de clase.', 'Reads the next vertex of the polygon, as in the pseudocode from class.'],
+        pasos: [{ t: ['<code>pop(0)</code> devuelve el primer elemento de la lista y lo borra. Así P siempre contiene los vértices que quedan por leer.', '<code>pop(0)</code> returns the first element of the list and removes it. So P always holds the vertices still to be read.'], ...R(/return P\.pop/) }] },
+      { id: 'vecinos', etiqueta: 'ANTERIOR · POSTERIOR', bloques: ['ANTERIOR', 'POSTERIOR'],
+        intro: ['Los dos vecinos de un vértice en el cierre C.', 'The two neighbours of a vertex in the hull C.'],
+        pasos: [
+          { t: ['<code>C.index(s)</code> busca la posición de s en C; restando 1 se obtiene el anterior.', '<code>C.index(s)</code> finds the position of s in C; subtracting 1 gives the previous one.'], ...R(/C\.index\(s\) - 1/) },
+          { t: ['Sumando 1 se obtiene el posterior. El <code>% len(C)</code> hace que C sea circular: el posterior del último es el primero.', 'Adding 1 gives the next one. The <code>% len(C)</code> makes C circular: the next of the last one is the first.'], ...R(/C\.index\(s\) \+ 1/) }],
+        pie: ['<code>index</code> recorre la lista, así que no es tiempo constante: por eso nuestra versión no llega al O(n) estricto de la cola doble (ver Limitaciones).', '<code>index</code> walks the list, so it is not constant time: that is why our version does not reach the strict O(n) of the deque (see Limitations).'] },
+      { id: 'rq', etiqueta: 'en_Rq', bloques: ['en_Rq'],
+        intro: ['Traduce la definición de R_q a código.', 'Translates the definition of R_q into code.'],
+        pasos: [
+          { t: ['Recibe el vértice nuevo p, el último añadido q, el cierre C y la orientación O.', 'It takes the new vertex p, the last added q, the hull C and the orientation O.'], ...R(/Input:/, /O \(orientación/) },
+          { t: ['p está en R_q si está a la izquierda (según O) de q→POSTERIOR(q) <b>y</b> de ANTERIOR(q)→q. Con <code>≥ 0</code>, como en los apuntes, un punto sobre uno de esos lados también se descarta: no puede ser vértice del cierre.', 'p is in R_q if it is to the left (according to O) of q→POSTERIOR(q) <b>and</b> of ANTERIOR(q)→q. With <code>≥ 0</code>, as in the notes, a point lying on one of those sides is also discarded: it cannot be a hull vertex.'], ...R(/return O\*signo/) }] },
+      { id: 'melkman', etiqueta: 'melkman', bloques: ['melkman'],
+        intro: ['La función principal: sigue los pasos de la idea del algoritmo. La lista <code>pasos</code> no es parte del algoritmo: guarda lo que pasa en cada paso para que la applet lo pueda dibujar.', 'The main function: it follows the steps of the idea of the algorithm. The list <code>pasos</code> is not part of the algorithm: it stores what happens at each step so the applet can draw it.'],
+        pasos: [
+          { t: ['<b>Inicio.</b> <code>MIN</code> saca los tres primeros vértices, que forman el triángulo inicial C. <code>O</code> es su orientación. El <code>while</code> del medio solo actúa si están alineados (ver Limitaciones).', '<b>Start.</b> <code>MIN</code> takes the first three vertices, which form the initial triangle C. <code>O</code> is its orientation. The <code>while</code> in the middle only acts if they are collinear (see Limitations).'], ...R(/# Inicio:/, /'caso': 'inicio'/) },
+          { t: ['Mientras queden vértices, se lee el siguiente, <b>p</b>. q es siempre el último vértice que entró en C.', 'While there are vertices left, the next one, <b>p</b>, is read. q is always the last vertex that joined C.'], ...R(/while P != \[\]:/, /p = MIN\(P\)/) },
+          { t: ['<b>Caso 1.</b> Mientras p esté en R_q (<code>en_Rq</code>), se descarta y se lee el siguiente.', '<b>Case 1.</b> While p is in R_q (<code>en_Rq</code>), it is discarded and the next one is read.'], ...R(/# Caso 1/, /^\s+p = MIN\(P\)/) },
+          { t: ['<b>Caso 2, tangente hacia atrás.</b> p no está en R_q y entra en el cierre. Desde q se va hacia atrás con ANTERIOR mientras O·Δ(t, s, p) ≤ 0; cuando sale &gt; 0, s es el punto de tangencia y p se inserta justo después de s.', '<b>Case 2, backward tangent.</b> p is not in R_q and joins the hull. Starting at q it moves back with ANTERIOR while O·Δ(t, s, p) ≤ 0; when it becomes &gt; 0, s is the tangent point and p is inserted right after s.'], ...R(/# Caso 2/, /C\.insert/) },
+          { t: ['<b>Caso 2, tangente hacia delante.</b> Desde p se va hacia delante con POSTERIOR; mientras O·Δ(s, t, p) ≤ 0, s ha quedado dentro del nuevo cierre y se borra. Al final p pasa a ser q.', '<b>Case 2, forward tangent.</b> Starting at p it moves forward with POSTERIOR; while O·Δ(s, t, p) ≤ 0, s is now inside the new hull and gets deleted. Finally p becomes q.'], ...R(/# Tangente hacia delante/, /'caso': 2/) },
+          { t: ['Si el último vértice de P también estaba en R_q, el bucle del caso 1 se para sin descartarlo, así que se descarta aquí.', 'If the last vertex of P was also in R_q, the case 1 loop stops without discarding it, so it is discarded here.'], ...R(/# El último vértice/, /pasos\.append/) },
+          { t: ['Cuando no quedan vértices, C es el cierre convexo.', 'When no vertices are left, C is the convex hull.'], ...R(/return C, pasos/) }] },
+      { id: 'ejemplos', etiqueta: 'ejemplos', bloques: ['import', 'ciudad', 'caracol', 'ejemplos'],
+        intro: ['Los polígonos del menú de la applet.', 'The polygons in the applet menu.'],
+        pasos: [
+          { t: ['<code>ciudad</code> genera el perfil de una ciudad: el suelo y después los tejados de derecha a izquierda, bajando a la calle entre edificio y edificio.', '<code>ciudad</code> builds a city skyline: the ground and then the roofs from right to left, going down to the street between buildings.'], ...R(/^def ciudad/, /return P/) },
+          { t: ['<code>caracol</code> genera una banda en espiral: sale hacia fuera por una curva y vuelve por otra paralela. El radio crece con el ángulo.', '<code>caracol</code> builds a spiral band: it goes out along one curve and comes back along a parallel one. The radius grows with the angle.'], ...R(/^def caracol/, /return ida/) },
+          { t: ['<code>ejemplos</code> es el diccionario del menú. El orden de las claves es el orden en el que salen, de más fácil a más difícil.', '<code>ejemplos</code> is the menu dictionary. The order of its keys is the order in which they appear, from easiest to hardest.'], ...R(/^ejemplos =/, /^}/) }] }
+    ]
+  });
 
   // ---- applet.ipynb, con el recorrido de los datos ----
   const P_JSON = [[0, 0], [4, 0], [2, 1], [4, 4], [0, 4], [1, 3], [3, 3]];
@@ -1817,7 +1790,7 @@ function visoresCodigo() {
   const marcarNodo = id => pipe.querySelectorAll('[data-n]').forEach(x => x.classList.toggle('on', x.dataset.n === id));
   pipe.querySelectorAll('.pnode').forEach(b => b.addEventListener('click', e => {
     const sub = e.target.closest('.sub span'), id = sub ? sub.dataset.n : b.dataset.n;
-    if (id === 'mk') { if (impl.idea) impl.idea.abrir('melkman', true); return; }
+    if (id === 'mk') { $('codigo-melkman').scrollIntoView({ behavior: 'smooth', block: 'start' }); if (visMk.bloques) visMk.elegir('melkman'); return; }
     if (visAp.bloques) visAp.elegir(id);
   }));
   visAp = new VisorCodigo($('vis-applet'), {
